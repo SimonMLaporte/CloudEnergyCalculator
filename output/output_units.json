@@ -1,0 +1,13 @@
+{
+  "cooling_electricity":"kWh/m2gfa/year",
+  "cooling_consumption":"kWh_cooling/m2gfa/year",
+  "lighting_electricity":"kWh/m2gfa/year",
+  "equipment_electricity":"kWh/m2gfa/year",
+  "lift_electricity": "kWh/m2gfa/year",
+  "carpark": "kWh/m2gfa/year", 
+  "outdoor_facade_lighting":"kWh/m2gfa/year",
+  "total_electricity":"kWh/m2gfa/year",
+  "max_electricity_demand": "kWelectricity",
+  "max_cooling_demand": "kWcooling",
+  "occupied_hours":"hours"
+}

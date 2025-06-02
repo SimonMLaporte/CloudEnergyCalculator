@@ -1,0 +1,48 @@
+{
+  "building_type": "string: office, residential, commercial, hospitality_low, hospitality_high",
+  "degrees_CW_rotation": "Orientation of facade 1 in degrees clock wise rotation from north",
+  "width": "m",
+  "length": "m",
+  "height": "m",
+  "gfa": "m2",
+  "carpark_area": "m2",
+  "outdoor_area": "m2",
+  "NV_area": "m2",
+  "LPD": "W/m2",
+  "sDA": "0 to 1 ratio",
+  "COP": "dimensionless",
+
+  "n_WWR": "0 to 1 ratio",
+  "n_window_width": "m",
+  "n_window_height": "m",
+  "n_overhang_depth": "m",
+  "n_sidefin_depth": "m",
+  "n_fin-to-fin_distance": "m",
+
+  "s_WWR": "0 to 1 ratio",
+  "s_window_width": "m",
+  "s_window_height": "m",
+  "s_overhang_depth": "m",
+  "s_sidefin_depth": "m",
+  "s_fin-to-fin_distance": "m",
+
+  "e_WWR": "0 to 1 ratio",
+  "e_window_width": "m",
+  "e_window_height": "m",
+  "e_overhang_depth": "m",
+  "e_sidefin_depth": "m",
+  "e_fin-to-fin_distance": "m",
+
+  "w_WWR": "0 to 1 ratio",
+  "w_window_width": "m",
+  "w_window_height": "m",
+  "w_overhang_depth": "m",
+  "w_sidefin_depth": "m",
+  "w_fin-to-fin_distance": "m",
+
+  "roof_WWR": "0 to 1 ratio",
+  "roof_U": "W/m2/k",
+  "wall_U":"W/m2/k",
+  "window_U":"W/m2/k",
+  "window_sc":"0 to 1 ratio"
+}

@@ -1,0 +1,48 @@
+{
+  "building_type": "office",
+  "degrees_CW_rotation": 0,
+  "width": 30,
+  "length": 30,
+  "height": 10,
+  "gfa": 300,
+  "carpark_area": 100,
+  "outdoor_area": 100,
+  "NV_area": 50,
+  "LPD": 5,
+  "sDA": 0.1,
+  "COP": 4,
+
+  "n_WWR": 0.1,
+  "n_window_width": 1,
+  "n_window_height": 3,
+  "n_overhang_depth": 0.5,
+  "n_sidefin_depth": 0.5,
+  "n_fin-to-fin_distance": 99,
+
+  "s_WWR": 0.2,
+  "s_window_width": 1,
+  "s_window_height": 3,
+  "s_overhang_depth": 0.5,
+  "s_sidefin_depth": 0.5,
+  "s_fin-to-fin_distance": 99,
+
+  "e_WWR": 0.2,
+  "e_window_width": 1,
+  "e_window_height": 3,
+  "e_overhang_depth": 0.5,
+  "e_sidefin_depth": 0.5,
+  "e_fin-to-fin_distance": 99,
+
+  "w_WWR": 0.2,
+  "w_window_width": 1,
+  "w_window_height": 3,
+  "w_overhang_depth": 0.5,
+  "w_sidefin_depth": 0.5,
+  "w_fin-to-fin_distance": 99,
+
+  "roof_WWR": 0,
+  "roof_U": 1,
+  "wall_U":1,
+  "window_u":1,
+  "window_sc":1
+}
