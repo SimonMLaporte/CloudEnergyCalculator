@@ -1,13 +1,13 @@
 {
-  "cooling_electricity": 153.31,
-  "cooling_consumption": 613.24,
+  "cooling_electricity": 262.85,
+  "cooling_consumption": 1051.39,
   "lighting_electricity": 17.23,
   "equipment_electricity": 34.46,
   "lift_electricity": 0,
   "carpark": 0,
   "outdoor_facade_lighting": 0,
-  "total_electricity": 205.0,
+  "total_electricity": 314.54,
   "max_electricity_demand": 0,
-  "max_cooling_demand": 137.2,
+  "max_cooling_demand": 192.77,
   "occupied_hours": 0
 }

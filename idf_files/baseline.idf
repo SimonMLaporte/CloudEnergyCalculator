@@ -279,6 +279,17 @@ Material,
     0.65;                    !- Visible Absorptance
 
 
+!-   ===========  ALL OBJECTS IN CLASS: MATERIAL:NOMASS ===========
+
+Material:NoMass,
+    noMass,                  !- Name
+    MediumSmooth,            !- Roughness
+    1,                       !- Thermal Resistance {m2-K/W}
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.7;                     !- Visible Absorptance
+
+
 !-   ===========  ALL OBJECTS IN CLASS: WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM ===========
 
 WindowMaterial:SimpleGlazingSystem,

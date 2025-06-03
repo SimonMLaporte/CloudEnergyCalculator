@@ -1,13 +1,46 @@
 {
   "cooling_electricity":"kWh/m2gfa/year",
-  "cooling_consumption":"kWh_cooling/m2gfa/year",
   "lighting_electricity":"kWh/m2gfa/year",
   "equipment_electricity":"kWh/m2gfa/year",
   "lift_electricity": "kWh/m2gfa/year",
   "carpark": "kWh/m2gfa/year", 
   "outdoor_facade_lighting":"kWh/m2gfa/year",
   "total_electricity":"kWh/m2gfa/year",
+  
   "max_electricity_demand": "kWelectricity",
   "max_cooling_demand": "kWcooling",
-  "occupied_hours":"hours"
+  "max_cooling_RT": "RT",
+  
+  "benchmark_submission_operation": "kgCo2/m2/year",
+  "benchmark_submission_embodied": "kgCo2/m2/year",
+  "benchmark_submission_transport": "kgCo2/m2/year",
+
+  "benchmark_average_operation": "kgCo2/m2/year",
+  "benchmark_average_embodied": "kgCo2/m2/year",
+  "benchmark_average_transport": "kgCo2/m2/year",
+
+  "benchmark_threshold_operation": "kgCo2/m2/year",
+  "benchmark_threshold_embodied": "kgCo2/m2/year",
+  "benchmark_threshold_transport": "kgCo2/m2/year",
+  "EUI_submission": "kWh/m2/year",
+  "EUI_average": "kWh/m2/year",
+  "EUI_threshold": "kWh/m2/year",
+
+  "ASSUMPTION_hours":"weekly operational hours",
+  "ASSUMPTION_equipment":"w/m2 internal equipment load",
+  "ASSUMPTION_lift":"w/m2 internal lift load",
+  "ASSUMPTION_facade_lighting":"w/m2facade facade lighting load",
+  "ASSUMPTION_landscape_lighting":"w/m2 landscape lighting load",
+  "ASSUMPTION_carpark_above_lighting":"w/m2 carpark lighting load",
+  "ASSUMPTION_carpark_below_lighting":"w/m2 carpark lighting load",
+  "ASSUMPTION_carpark_below_ventilation":"w/m2 carpark ventilation load",
+  "ASSUMPTION_carpark_above_ventilation":"w/m2 carpark ventilation load",
+  "ASSUMPTION_people_density":"people per pax/m2gfa",
+  "ASSUMPTION_co2_setpoint":"ppm co2 [not currently implemented]",
+  "ASSUMPTION_temp_setpoint":"degC internal target AC temperature",
+  "ASSUMPTION_occupant_diversity":"0 to 1 ratio of how many percent occupants are typically in the building",
+  "ASSUMPTION_weekly_hours":"weekly hours of AC operation",
+  "ASSUMPTION_avergae_malaysia": "kWh/m2/year",
+  "ASSUMPTION_threshold_malaysia": "kWh/m2/year",
+  "ASSUMPTION_co2_grid_factor": "kgCO2e/kWh"
 }
