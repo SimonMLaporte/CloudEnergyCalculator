@@ -268,9 +268,9 @@ Schedule:Compact,
 !-   ===========  ALL OBJECTS IN CLASS: MATERIAL ===========
 
 Material,
-    100mm_RC,                !- Name
+    300mm_RC,                !- Name
     Smooth,                  !- Roughness
-    0.1,                     !- Thickness {m}
+    0.3,                     !- Thickness {m}
     1.73,                    !- Conductivity {W/m-K}
     2400,                    !- Density {kg/m3}
     837,                     !- Specific Heat {J/kg-K}
@@ -291,7 +291,7 @@ WindowMaterial:SimpleGlazingSystem,
 
 Construction,
     AllSurfaces,             !- Name
-    100mm_RC;                !- Outside Layer
+    300mm_RC;                !- Outside Layer
 
 Construction,
     window,                  !- Name

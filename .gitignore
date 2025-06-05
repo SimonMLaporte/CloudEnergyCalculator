@@ -4,3 +4,4 @@ output
 !/ouput/ouput.json
 !/ouput/used_assumptions.json
 docs
+/resource/generated.idf

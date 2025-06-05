@@ -108,6 +108,12 @@ def generate_idf(inputJson):
     freshAir.Outdoor_Air_Flow_per_Zone = (assumptions['Fresh Air Rate per Floor Area (l/s/m2)'] * (1-NV) * gfa + assumptions['Fresh Air Rate per person (l/s)'] * (1-NV) * gfa * assumptions['People density (pax/m2 AC area)'])/1000
     
     #Set building thermal mass
+    idf.newidfobject("INTERNALMASS",
+                Name = 'internalmass',
+                Construction_Name = 'AllSurfaces',
+                Zone_or_ZoneList_Name = 'main',
+                Surface_Area = gfa*(1-NV)
+                )
     
     #Set constructions
     set_construction(idf, 'wall_n',n_name,inputJson['1_wall_u'],inputJson['1_albedo'],inputJson['1_glass_sc'],inputJson["1_glass_u"])
@@ -260,10 +266,8 @@ def calculate_area(coords):
     return area
 
 def load_assumptions(building_type):
-    
     script_dir = os.path.dirname(__file__)
     project_root = os.path.dirname(script_dir)
-    idf_file_dir= os.path.join(project_root, 'idf_files')
     resc_path = os.path.join(project_root, 'resource')
     assumption_path = os.path.join(resc_path, 'assumptions.csv')
     
@@ -272,16 +276,12 @@ def load_assumptions(building_type):
     parameters = building_data.drop(columns=['Building type']).iloc[0].to_dict()
     return parameters
     
-    
-    return assumptions
-    
 def load_baseline():
     script_dir = os.path.dirname(__file__)
     project_root = os.path.dirname(script_dir)
-    idf_file_dir= os.path.join(project_root, 'idf_files')
     resc_path = os.path.join(project_root, 'resource')
-    idf_file = os.path.join(idf_file_dir, 'baseline.idf')
-    outpath = os.path.join(idf_file_dir, 'generated.idf')
+    idf_file = os.path.join(resc_path, 'baseline.idf')
+    outpath = os.path.join(resc_path, 'generated.idf')
     idd_file_path = os.path.join(resc_path, 'Energy+.idd')
     IDF.setiddname(idd_file_path)
     idf = IDF(idf_file)

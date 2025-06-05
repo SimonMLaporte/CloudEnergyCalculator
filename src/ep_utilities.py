@@ -45,6 +45,7 @@ def extract_ep_results(inputJSON, assumptions):
     gfa = inputJSON["gfa"]
     COP = inputJSON["COP"]
 
+    # Calculate energy use
     annual_cooling_demand = round(sum(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_cooling_electricity = round(annual_cooling_demand/COP,2)
     annual_lighting_electricity = round(sum(get_csv_data(result_file,"main_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
@@ -56,18 +57,48 @@ def extract_ep_results(inputJSON, assumptions):
     max_electricity_demand = round(max(get_csv_data(result_file,"Electricity:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     max_cooling_demands = round(max(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     
+    # Calculate 
+    gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
+    
+    EUI_submission = annual_total_electricity 
+    EUI_average = assumptions['Average Malaysian EUI (kWh/m2/year)']
+    EUI_threshold = assumptions['1-star threshold EUI (kWh/m2/year)']
+    
+    submission_operation = annual_total_electricity * gridFactor
+    submission_embodied = 1
+    submission_transport = 1
+    average_operation =EUI_average * gridFactor
+    average_embodied = 1
+    average_transport = 1
+    threshold_operation = EUI_threshold * gridFactor
+    threshold_embodied = 1
+    threshold_transport = 1
+    
     output= {
         "cooling_electricity":annual_cooling_electricity,
         "cooling_consumption":annual_cooling_demand,
         "lighting_indoor_electricity":annual_lighting_electricity,
         "equipment_electricity":annual_equipment_electricity,
         "lift_electricity": annual_lift_electricity,
-        "carpark": annual_carpark_electricity, 
+        "carpark_electricity": annual_carpark_electricity, 
         "lighting_outdoor_electricity":annual_outdoor_lighting_electricity,
         "total_electricity":annual_total_electricity,
         "max_electricity_demand": max_electricity_demand,
         "max_cooling_demand_kW": max_cooling_demands,
         "max_cooling_demand_RT": max_cooling_demands*0.284,
+        "EUI_submission": EUI_submission,
+        "EUI_average": EUI_average,
+        "EUI_threshold": EUI_threshold,
+        "submission_operation": submission_operation,
+        "submission_embodied": submission_embodied,
+        "submission_transport": submission_transport,
+        "average_operation": average_operation,
+        "average_embodied": average_embodied,
+        "average_transport": average_transport,
+        "threshold_operation": threshold_operation,
+        "threshold_embodied": threshold_embodied,
+        "threshold_transport": threshold_transport,
+        
     }
     with open(output_file_path, 'w') as output_file:
         json.dump(output, output_file,indent=2)
@@ -77,7 +108,6 @@ def extract_ep_results(inputJSON, assumptions):
     
     
     return 0
-#debug_show_ep_results()
 
 
 def get_csv_data(csv_path,header):
