@@ -1,13 +1,12 @@
 {
-  "cooling_electricity": 262.85,
-  "cooling_consumption": 1051.39,
-  "lighting_electricity": 17.23,
-  "equipment_electricity": 34.46,
-  "lift_electricity": 0,
-  "carpark": 0,
-  "outdoor_facade_lighting": 0,
-  "total_electricity": 314.54,
-  "max_electricity_demand": 0,
-  "max_cooling_demand": 192.77,
-  "occupied_hours": 0
+  "cooling_electricity": 49.57,
+  "cooling_consumption": 198.27,
+  "lighting_indoor_electricity": 17.23,
+  "equipment_electricity": 27.57,
+  "lift_electricity": 3.45,
+  "carpark": 0.46,
+  "lighting_outdoor_electricity": 3.1,
+  "total_electricity": 101.38,
+  "max_electricity_demand": 45.14,
+  "max_cooling_demand": 269.16
 }

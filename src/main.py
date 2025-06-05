@@ -13,16 +13,8 @@ debugJSON = os.path.join(json_file_dir, 'sample_input.json')
 f = open(debugJSON)
 inputJSON = json.load(f)
 
-#Load assumptions
-buildingtype = inputJSON['building_type']
-assumption_file = buildingtype + "_assumptions.json"
-assumption_path = os.path.join(json_file_dir, assumption_file)
-f = open(assumption_path)
-assumptions = json.load(f)
-
-
 #run script
-generate_idf(inputJSON,assumptions)
+assumptions = generate_idf(inputJSON)
 run_energyplus()
-extract_ep_results(inputJSON)
+extract_ep_results(inputJSON, assumptions)
 debug_show_ep_results()

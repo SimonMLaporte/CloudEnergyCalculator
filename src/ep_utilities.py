@@ -35,46 +35,50 @@ def debug_show_ep_results():
     plt.show()
     
     return 0
-def extract_ep_results(inputJSON):
+def extract_ep_results(inputJSON, assumptions):
     script_dir = os.path.dirname(__file__)
     project_root = os.path.dirname(script_dir)
     result_dir = os.path.join(project_root, 'output')
     result_file = os.path.join(result_dir, 'eplusout.csv')
     output_file_path = os.path.join(result_dir, 'output.json')
+    assumptions_out_path = os.path.join(result_dir, 'used_assumptions.json')
     gfa = inputJSON["gfa"]
     COP = inputJSON["COP"]
 
     annual_cooling_demand = round(sum(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_cooling_electricity = round(annual_cooling_demand/COP,2)
-    annual_lighting_electricity = round(sum(get_csv_data(result_file,"InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
-    annual_equipment_electricity = round(sum(get_csv_data(result_file,"InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
-    annual_lift_electricity = 0
-    annual_carpark_electricity = 0
-    annual_outdoor_lighting_electricity = 0
+    annual_lighting_electricity = round(sum(get_csv_data(result_file,"main_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
+    annual_equipment_electricity = round(sum(get_csv_data(result_file,"main_equipment:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
+    annual_lift_electricity = round(sum(get_csv_data(result_file,"lifts:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
+    annual_carpark_electricity = round(sum(get_csv_data(result_file,"carpark_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2) + round(sum(get_csv_data(result_file,"carpark_ventilation:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
+    annual_outdoor_lighting_electricity = round(sum(get_csv_data(result_file,"facade_landscape_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_total_electricity = annual_cooling_electricity + annual_equipment_electricity +annual_lighting_electricity+ annual_lift_electricity + annual_carpark_electricity + annual_outdoor_lighting_electricity
-    annual_occupied_hours = 0
-    max_electricity_demand = 0
+    max_electricity_demand = round(max(get_csv_data(result_file,"Electricity:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     max_cooling_demands = round(max(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     
     output= {
         "cooling_electricity":annual_cooling_electricity,
         "cooling_consumption":annual_cooling_demand,
-        "lighting_electricity":annual_lighting_electricity,
+        "lighting_indoor_electricity":annual_lighting_electricity,
         "equipment_electricity":annual_equipment_electricity,
         "lift_electricity": annual_lift_electricity,
         "carpark": annual_carpark_electricity, 
-        "outdoor_facade_lighting":annual_outdoor_lighting_electricity,
+        "lighting_outdoor_electricity":annual_outdoor_lighting_electricity,
         "total_electricity":annual_total_electricity,
         "max_electricity_demand": max_electricity_demand,
-        "max_cooling_demand": max_cooling_demands,
-        "occupied_hours":annual_occupied_hours
+        "max_cooling_demand_kW": max_cooling_demands,
+        "max_cooling_demand_RT": max_cooling_demands*0.284,
     }
     with open(output_file_path, 'w') as output_file:
         json.dump(output, output_file,indent=2)
+        
+    with open(assumptions_out_path, 'w') as output_file:
+        json.dump(assumptions, output_file,indent=2)
     
     
     return 0
 #debug_show_ep_results()
+
 
 def get_csv_data(csv_path,header):
     df = pd.read_csv(csv_path)

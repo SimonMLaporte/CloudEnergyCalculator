@@ -2,5 +2,5 @@ venv
 /src/__pycache__
 output
 !/ouput/ouput.json
-!/ouput/ouput_units.json
+!/ouput/used_assumptions.json
 docs
