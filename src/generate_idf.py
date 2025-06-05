@@ -6,10 +6,19 @@ import math
 
 
 def generate_idf(inputJson):
+    schedules = { "office": "office",
+                 "retail_hyper": "retail",
+                 "retail_center": "retail",
+                 "hotel_4star": "hotel",
+                 "healthcare_limited": "alwaysON",
+                 "healthcare_major": "alwaysON",
+                 "residential": "residential",
+    }
     idf, outpath = load_baseline()
     assumptions = load_assumptions(inputJson['building_type'])
     
     #Extract values from JSON
+    schedule = schedules[inputJson['building_type']]
     width = inputJson["facade1_width"]
     length = inputJson["facade2_width"]
     height =inputJson["height"]
@@ -21,39 +30,41 @@ def generate_idf(inputJson):
     w_WWR = inputJson["4_WWR"]
     NV = inputJson['NV_percent']
     
+    
+    
     #add dummy objects
     idf.newidfobject("LIGHTS",
                      Name = 'dummyLights',
                      Zone_or_ZoneList_or_Space_or_SpaceList_Name = 'dummyBlock',
-                     Schedule_Name = 'office',
-                     Lighting_Level = NV * gfa * inputJson["LPD"],
+                     Schedule_Name = schedule,
+                     Lighting_Level = NV * gfa * inputJson["LPD"] * (1-inputJson['sDA']),
                      EndUse_Subcategory = "main_lighting"
                      )
     idf.newidfobject("LIGHTS",
                      Name = 'facadeLights_landscapeLights',
                      Zone_or_ZoneList_or_Space_or_SpaceList_Name = 'dummyBlock',
-                     Schedule_Name = 'office',
+                     Schedule_Name = 'night',
                      Lighting_Level = facade_area * assumptions['Facade lighting (W/m2)'] + inputJson['landscape_area']* assumptions['Landscape lighting (W/m2)'],
                      EndUse_Subcategory = "facade_landscape_lighting"
                      )
     idf.newidfobject("LIGHTS",
                      Name = 'carParkLights',
                      Zone_or_ZoneList_or_Space_or_SpaceList_Name = 'dummyBlock',
-                     Schedule_Name = 'office',
+                     Schedule_Name = 'night',
                      Lighting_Level = inputJson['carpark_area_above_ground'] * assumptions['Carpark lighting, above ground (W/m2)']+ inputJson['carpark_area_below_ground'] * assumptions['Carpark lighting, below ground (W/m2)'],
                      EndUse_Subcategory = "carpark_lighting"
                      )
     idf.newidfobject("ELECTRICEQUIPMENT",
                      Name = 'dummyEquipment',
                      Zone_or_ZoneList_or_Space_or_SpaceList_Name = 'dummyBlock',
-                     Schedule_Name = 'office',
+                     Schedule_Name = schedule,
                      Design_Level = NV * gfa * (assumptions['Equipment (W/m2)']),
                      EndUse_Subcategory = "main_equipment"
                      )
     idf.newidfobject("ELECTRICEQUIPMENT",
                      Name = 'lifts',
                      Zone_or_ZoneList_or_Space_or_SpaceList_Name = 'dummyBlock',
-                     Schedule_Name = 'office',
+                     Schedule_Name = schedule,
                      Design_Level = gfa * assumptions['Lift (W/m2)'],
                      EndUse_Subcategory = "lifts"
                      )
@@ -62,7 +73,7 @@ def generate_idf(inputJson):
     idf.newidfobject("ELECTRICEQUIPMENT",
                      Name = 'carparkVentilation',
                      Zone_or_ZoneList_or_Space_or_SpaceList_Name = 'dummyBlock',
-                     Schedule_Name = 'office',
+                     Schedule_Name = schedule,
                      Design_Level = inputJson['carpark_area_above_ground']*assumptions['Carpark ventilation, above ground (W/m2)'] + inputJson['carpark_area_below_ground']*assumptions['Carpark ventilation, below ground (W/m2)'],
                      EndUse_Subcategory = "carpark_ventilation"
                      )
@@ -70,7 +81,7 @@ def generate_idf(inputJson):
 
 
     #Set Schedules
-    set_schedules(idf,inputJson['building_type'])
+    set_schedules(idf,schedule)
 
     # Set building size
     heightScale = height * (1-NV) 
@@ -89,7 +100,7 @@ def generate_idf(inputJson):
     
     
     # Set lighting
-    newWatt = gfa*(1-NV) * inputJson["LPD"]
+    newWatt = gfa*(1-NV) * (1-inputJson['sDA']) * inputJson["LPD"]
     lights = idf.idfobjects["LIGHTS"]
     lights[0].Lighting_Level = newWatt
     
@@ -287,10 +298,22 @@ def load_baseline():
     idf = IDF(idf_file)
     return idf, outpath
 
-def set_schedules(idf, building_type):
-    #Set hourly
+def set_schedules(idf, schedule):
+    lights = idf.idfobjects["LIGHTS"][0]
+    lights.Schedule_Name = schedule
     
-    #Set weekly
+    equip = idf.idfobjects["ELECTRICEQUIPMENT"][0]
+    equip.Schedule_Name = schedule
+    
+    freshAir = idf.idfobjects["DESIGNSPECIFICATION:OUTDOORAIR"][0]
+    freshAir.Outdoor_Air_Schedule_Name = schedule
+    
+    HVAC = idf.idfobjects["ZONEHVAC:IDEALLOADSAIRSYSTEM"][0]
+    HVAC.Availability_Schedule_Name = schedule
+    
+    people = idf.idfobjects["PEOPLE"][0]
+    people.Number_of_People_Schedule_Name = schedule
+    
     
     return 0
     

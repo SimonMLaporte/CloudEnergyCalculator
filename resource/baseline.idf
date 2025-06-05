@@ -144,7 +144,7 @@ ScheduleTypeLimits,
 !-   ===========  ALL OBJECTS IN CLASS: SCHEDULE:DAY:HOURLY ===========
 
 Schedule:Day:Hourly,
-    hourlySchedule,          !- Name
+    hourlyScheduleOffice,    !- Name
     On/Off,                  !- Schedule Type Limits Name
     0,                       !- Hour 1
     0,                       !- Hour 2
@@ -163,7 +163,7 @@ Schedule:Day:Hourly,
     1,                       !- Hour 15
     1,                       !- Hour 16
     1,                       !- Hour 17
-    1,                       !- Hour 18
+    0,                       !- Hour 18
     0,                       !- Hour 19
     0,                       !- Hour 20
     0,                       !- Hour 21
@@ -199,23 +199,238 @@ Schedule:Day:Hourly,
     0,                       !- Hour 23
     0;                       !- Hour 24
 
+Schedule:Day:Hourly,
+    hourlyRetail,            !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    0,                       !- Hour 1
+    0,                       !- Hour 2
+    0,                       !- Hour 3
+    0,                       !- Hour 4
+    0,                       !- Hour 5
+    0,                       !- Hour 6
+    0,                       !- Hour 7
+    0,                       !- Hour 8
+    0,                       !- Hour 9
+    1,                       !- Hour 10
+    1,                       !- Hour 11
+    1,                       !- Hour 12
+    1,                       !- Hour 13
+    1,                       !- Hour 14
+    1,                       !- Hour 15
+    1,                       !- Hour 16
+    1,                       !- Hour 17
+    1,                       !- Hour 18
+    1,                       !- Hour 19
+    1,                       !- Hour 20
+    1,                       !- Hour 21
+    0,                       !- Hour 22
+    0,                       !- Hour 23
+    0;                       !- Hour 24
+
+Schedule:Day:Hourly,
+    AlwaysON,                !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    1,                       !- Hour 1
+    1,                       !- Hour 2
+    1,                       !- Hour 3
+    1,                       !- Hour 4
+    1,                       !- Hour 5
+    1,                       !- Hour 6
+    1,                       !- Hour 7
+    1,                       !- Hour 8
+    1,                       !- Hour 9
+    1,                       !- Hour 10
+    1,                       !- Hour 11
+    1,                       !- Hour 12
+    1,                       !- Hour 13
+    1,                       !- Hour 14
+    1,                       !- Hour 15
+    1,                       !- Hour 16
+    1,                       !- Hour 17
+    1,                       !- Hour 18
+    1,                       !- Hour 19
+    1,                       !- Hour 20
+    1,                       !- Hour 21
+    1,                       !- Hour 22
+    1,                       !- Hour 23
+    1;                       !- Hour 24
+
+Schedule:Day:Hourly,
+    Hourly Residential,      !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    0,                       !- Hour 1
+    0,                       !- Hour 2
+    0,                       !- Hour 3
+    0,                       !- Hour 4
+    0,                       !- Hour 5
+    0,                       !- Hour 6
+    0,                       !- Hour 7
+    0,                       !- Hour 8
+    0,                       !- Hour 9
+    0,                       !- Hour 10
+    0,                       !- Hour 11
+    0,                       !- Hour 12
+    0,                       !- Hour 13
+    0,                       !- Hour 14
+    0,                       !- Hour 15
+    0,                       !- Hour 16
+    0,                       !- Hour 17
+    0,                       !- Hour 18
+    1,                       !- Hour 19
+    1,                       !- Hour 20
+    0,                       !- Hour 21
+    0,                       !- Hour 22
+    0,                       !- Hour 23
+    0;                       !- Hour 24
+
+Schedule:Day:Hourly,
+    NightTime,               !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    1,                       !- Hour 1
+    1,                       !- Hour 2
+    1,                       !- Hour 3
+    1,                       !- Hour 4
+    1,                       !- Hour 5
+    1,                       !- Hour 6
+    1,                       !- Hour 7
+    0,                       !- Hour 8
+    0,                       !- Hour 9
+    0,                       !- Hour 10
+    0,                       !- Hour 11
+    0,                       !- Hour 12
+    0,                       !- Hour 13
+    0,                       !- Hour 14
+    0,                       !- Hour 15
+    0,                       !- Hour 16
+    0,                       !- Hour 17
+    0,                       !- Hour 18
+    0,                       !- Hour 19
+    1,                       !- Hour 20
+    1,                       !- Hour 21
+    1,                       !- Hour 22
+    1,                       !- Hour 23
+    1;                       !- Hour 24
+
+Schedule:Day:Hourly,
+    hourlyHotel,             !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    1,                       !- Hour 1
+    1,                       !- Hour 2
+    1,                       !- Hour 3
+    1,                       !- Hour 4
+    1,                       !- Hour 5
+    1,                       !- Hour 6
+    1,                       !- Hour 7
+    1,                       !- Hour 8
+    1,                       !- Hour 9
+    1,                       !- Hour 10
+    1,                       !- Hour 11
+    1,                       !- Hour 12
+    1,                       !- Hour 13
+    1,                       !- Hour 14
+    1,                       !- Hour 15
+    1,                       !- Hour 16
+    1,                       !- Hour 17
+    1,                       !- Hour 18
+    1,                       !- Hour 19
+    1,                       !- Hour 20
+    1,                       !- Hour 21
+    1,                       !- Hour 22
+    1,                       !- Hour 23
+    1;                       !- Hour 24
+
 
 !-   ===========  ALL OBJECTS IN CLASS: SCHEDULE:WEEK:DAILY ===========
 
 Schedule:Week:Daily,
     weeklyOffice,            !- Name
-    hourlySchedule,          !- Sunday Schedule:Day Name
-    hourlySchedule,          !- Monday Schedule:Day Name
-    hourlySchedule,          !- Tuesday Schedule:Day Name
-    hourlySchedule,          !- Wednesday Schedule:Day Name
-    hourlySchedule,          !- Thursday Schedule:Day Name
-    hourlySchedule,          !- Friday Schedule:Day Name
+    hourlyScheduleOffice,    !- Sunday Schedule:Day Name
+    hourlyScheduleOffice,    !- Monday Schedule:Day Name
+    hourlyScheduleOffice,    !- Tuesday Schedule:Day Name
+    hourlyScheduleOffice,    !- Wednesday Schedule:Day Name
+    hourlyScheduleOffice,    !- Thursday Schedule:Day Name
+    hourlyScheduleOffice,    !- Friday Schedule:Day Name
     hourlyOFF,               !- Saturday Schedule:Day Name
     hourlyOFF,               !- Holiday Schedule:Day Name
-    hourlySchedule,          !- SummerDesignDay Schedule:Day Name
-    hourlySchedule,          !- WinterDesignDay Schedule:Day Name
-    hourlySchedule,          !- CustomDay1 Schedule:Day Name
-    hourlySchedule;          !- CustomDay2 Schedule:Day Name
+    hourlyScheduleOffice,    !- SummerDesignDay Schedule:Day Name
+    hourlyScheduleOffice,    !- WinterDesignDay Schedule:Day Name
+    hourlyScheduleOffice,    !- CustomDay1 Schedule:Day Name
+    hourlyScheduleOffice;    !- CustomDay2 Schedule:Day Name
+
+Schedule:Week:Daily,
+    weeklyRetail,            !- Name
+    hourlyRetail,            !- Sunday Schedule:Day Name
+    hourlyRetail,            !- Monday Schedule:Day Name
+    hourlyRetail,            !- Tuesday Schedule:Day Name
+    hourlyRetail,            !- Wednesday Schedule:Day Name
+    hourlyRetail,            !- Thursday Schedule:Day Name
+    hourlyRetail,            !- Friday Schedule:Day Name
+    hourlyRetail,            !- Saturday Schedule:Day Name
+    hourlyRetail,            !- Holiday Schedule:Day Name
+    hourlyRetail,            !- SummerDesignDay Schedule:Day Name
+    hourlyRetail,            !- WinterDesignDay Schedule:Day Name
+    hourlyRetail,            !- CustomDay1 Schedule:Day Name
+    hourlyRetail;            !- CustomDay2 Schedule:Day Name
+
+Schedule:Week:Daily,
+    alwaysON,                !- Name
+    AlwaysON,                !- Sunday Schedule:Day Name
+    AlwaysON,                !- Monday Schedule:Day Name
+    AlwaysON,                !- Tuesday Schedule:Day Name
+    AlwaysON,                !- Wednesday Schedule:Day Name
+    AlwaysON,                !- Thursday Schedule:Day Name
+    AlwaysON,                !- Friday Schedule:Day Name
+    AlwaysON,                !- Saturday Schedule:Day Name
+    AlwaysON,                !- Holiday Schedule:Day Name
+    AlwaysON,                !- SummerDesignDay Schedule:Day Name
+    AlwaysON,                !- WinterDesignDay Schedule:Day Name
+    AlwaysON,                !- CustomDay1 Schedule:Day Name
+    AlwaysON;                !- CustomDay2 Schedule:Day Name
+
+Schedule:Week:Daily,
+    weeklyResidential,       !- Name
+    Hourly Residential,      !- Sunday Schedule:Day Name
+    Hourly Residential,      !- Monday Schedule:Day Name
+    Hourly Residential,      !- Tuesday Schedule:Day Name
+    Hourly Residential,      !- Wednesday Schedule:Day Name
+    Hourly Residential,      !- Thursday Schedule:Day Name
+    Hourly Residential,      !- Friday Schedule:Day Name
+    Hourly Residential,      !- Saturday Schedule:Day Name
+    Hourly Residential,      !- Holiday Schedule:Day Name
+    Hourly Residential,      !- SummerDesignDay Schedule:Day Name
+    Hourly Residential,      !- WinterDesignDay Schedule:Day Name
+    Hourly Residential,      !- CustomDay1 Schedule:Day Name
+    Hourly Residential;      !- CustomDay2 Schedule:Day Name
+
+Schedule:Week:Daily,
+    weeklyNight,             !- Name
+    NightTime,               !- Sunday Schedule:Day Name
+    NightTime,               !- Monday Schedule:Day Name
+    NightTime,               !- Tuesday Schedule:Day Name
+    NightTime,               !- Wednesday Schedule:Day Name
+    NightTime,               !- Thursday Schedule:Day Name
+    NightTime,               !- Friday Schedule:Day Name
+    NightTime,               !- Saturday Schedule:Day Name
+    NightTime,               !- Holiday Schedule:Day Name
+    NightTime,               !- SummerDesignDay Schedule:Day Name
+    NightTime,               !- WinterDesignDay Schedule:Day Name
+    NightTime,               !- CustomDay1 Schedule:Day Name
+    NightTime;               !- CustomDay2 Schedule:Day Name
+
+Schedule:Week:Daily,
+    weeklyHotel,             !- Name
+    hourlyHotel,             !- Sunday Schedule:Day Name
+    hourlyHotel,             !- Monday Schedule:Day Name
+    hourlyHotel,             !- Tuesday Schedule:Day Name
+    hourlyHotel,             !- Wednesday Schedule:Day Name
+    hourlyHotel,             !- Thursday Schedule:Day Name
+    hourlyHotel,             !- Friday Schedule:Day Name
+    hourlyHotel,             !- Saturday Schedule:Day Name
+    hourlyHotel,             !- Holiday Schedule:Day Name
+    hourlyHotel,             !- SummerDesignDay Schedule:Day Name
+    hourlyHotel,             !- WinterDesignDay Schedule:Day Name
+    hourlyHotel,             !- CustomDay1 Schedule:Day Name
+    hourlyHotel;             !- CustomDay2 Schedule:Day Name
 
 
 !-   ===========  ALL OBJECTS IN CLASS: SCHEDULE:YEAR ===========
@@ -224,6 +439,51 @@ Schedule:Year,
     office,                  !- Name
     On/Off,                  !- Schedule Type Limits Name
     weeklyOffice,            !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+
+Schedule:Year,
+    retail,                  !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    weeklyRetail,            !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+
+Schedule:Year,
+    hotel,                   !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    weeklyHotel,             !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+
+Schedule:Year,
+    residential,             !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    weeklyResidential,       !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+
+Schedule:Year,
+    alwaysON,                !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    alwaysON,                !- Schedule:Week Name 1
+    1,                       !- Start Month 1
+    1,                       !- Start Day 1
+    12,                      !- End Month 1
+    31;                      !- End Day 1
+
+Schedule:Year,
+    night,                   !- Name
+    On/Off,                  !- Schedule Type Limits Name
+    weeklyNight,             !- Schedule:Week Name 1
     1,                       !- Start Month 1
     1,                       !- Start Day 1
     12,                      !- End Month 1
