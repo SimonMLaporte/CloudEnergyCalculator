@@ -2,6 +2,7 @@
 from generate_idf import generate_idf
 from ep_run import run_energyplus
 from ep_utilities import extract_ep_results,debug_show_ep_results
+from embodied_transport_calculation import embodied_transport_emissions
 import json
 import os
 
@@ -16,5 +17,6 @@ inputJSON = json.load(f)
 #run script
 assumptions = generate_idf(inputJSON)
 run_energyplus()
-extract_ep_results(inputJSON, assumptions)
+other_carbon = embodied_transport_emissions(inputJSON)
+extract_ep_results(inputJSON, assumptions, other_carbon)
 debug_show_ep_results()

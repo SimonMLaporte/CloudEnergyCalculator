@@ -35,7 +35,7 @@ def debug_show_ep_results():
     plt.show()
     
     return 0
-def extract_ep_results(inputJSON, assumptions):
+def extract_ep_results(inputJSON, assumptions, other_carbon):
     script_dir = os.path.dirname(__file__)
     project_root = os.path.dirname(script_dir)
     result_dir = os.path.join(project_root, 'output')
@@ -45,7 +45,7 @@ def extract_ep_results(inputJSON, assumptions):
     gfa = inputJSON["gfa"]
     COP = inputJSON["COP"]
 
-    # Calculate energy use
+    # Extract energy use
     annual_cooling_demand = round(sum(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_cooling_electricity = round(annual_cooling_demand/COP,2)
     annual_lighting_electricity = round(sum(get_csv_data(result_file,"main_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
@@ -57,16 +57,17 @@ def extract_ep_results(inputJSON, assumptions):
     max_electricity_demand = round(max(get_csv_data(result_file,"Electricity:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     max_cooling_demands = round(max(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     
-    # Calculate 
-    gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
     
+    #Extract EUI
+    gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
     EUI_submission = annual_total_electricity 
     EUI_average = assumptions['Average Malaysian EUI (kWh/m2/year)']
     EUI_threshold = assumptions['1-star threshold EUI (kWh/m2/year)']
     
+    #Extract carbon emissions
     submission_operation = annual_total_electricity * gridFactor
-    submission_embodied = 1
-    submission_transport = 1
+    submission_embodied = other_carbon['embodied_carbon']
+    submission_transport = other_carbon['transport_carbon']
     average_operation =EUI_average * gridFactor
     average_embodied = 1
     average_transport = 1
