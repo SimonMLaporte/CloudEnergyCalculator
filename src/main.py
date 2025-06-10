@@ -16,7 +16,7 @@ inputJSON = json.load(f)
 
 #run script
 assumptions = generate_idf(inputJSON)
-run_energyplus()
+#run_energyplus()
 other_carbon = embodied_transport_emissions(inputJSON)
 extract_ep_results(inputJSON, assumptions, other_carbon)
 debug_show_ep_results()

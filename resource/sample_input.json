@@ -1,5 +1,5 @@
 {
-  "building_type": "retail_center",
+  "building_type": "office",
   "facade1_orientation": "North",
   "facade1_width": 30,
   "facade2_width": 30,
@@ -75,11 +75,12 @@
   "steel_usage": 100,
   "green_concrete_percent": 0,
   "green_steel_percent": 0,
+  "timber_usage": 1,
 
-  "communte_by_car": 70,
-  "communte_by_motor_bike": 30,
+  "commute_by_car": 70,
+  "commute_by_motor_bike": 30,
   "commute_by_lowCo2": 0,
-  "communte_distance_by_car": 10,
-  "communte_distance_by_motor_bike": 10,
-  "communte_distance_by_lowCo2": 10
+  "commute_distance_by_car": 10,
+  "commute_distance_by_motor_bike": 10,
+  "commute_distance_by_lowCo2": 10
 }

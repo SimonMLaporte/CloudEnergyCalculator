@@ -1,8 +1,7 @@
 from geomeppy import IDF
-from eppy.geometry.surface import area as surface_area_calc
 import pandas as pd
 import os
-import math
+
 
 
 def generate_idf(inputJson):
@@ -110,13 +109,13 @@ def generate_idf(inputJson):
     equip[0].Design_Level = newEquip
 
     # Set people
-    newPeople = gfa * (1-NV)* assumptions['People density (pax/m2 AC area)'] * assumptions['People diversity, 0-1']
+    newPeople = gfa * (1-NV) * assumptions['People diversity, 0-1'] /assumptions['People density (m2/pax AC area)']
     people = idf.idfobjects["PEOPLE"]
     people[0].Number_of_People = newPeople
 
     #Set fresh air rate
     freshAir = idf.idfobjects["DESIGNSPECIFICATION:OUTDOORAIR"][0]
-    freshAir.Outdoor_Air_Flow_per_Zone = (assumptions['Fresh Air Rate per Floor Area (l/s/m2)'] * (1-NV) * gfa + assumptions['Fresh Air Rate per person (l/s)'] * (1-NV) * gfa * assumptions['People density (pax/m2 AC area)'])/1000
+    freshAir.Outdoor_Air_Flow_per_Zone = (assumptions['Fresh Air Rate per Floor Area (l/s/m2)'] * (1-NV) * gfa + assumptions['Fresh Air Rate per person (l/s)'] * (1-NV) * (gfa / assumptions['People density (m2/pax AC area)']))/1000
     
     #Set building thermal mass
     idf.newidfobject("INTERNALMASS",
@@ -221,7 +220,6 @@ def set_construction(idf, wallID,windowID, Uvalue, albedo, glassSC, glassU):
             s.Construction_Name = construction_name
     
     return 0
-
     
 def set_building_dimensions(idf,length,width,height,orientation):
     
@@ -276,15 +274,39 @@ def calculate_area(coords):
     area = 0.5 * abs(sum(x[i] * y[i - 1] - x[i - 1] * y[i] for i in range(len(x))))
     return area
 
-def load_assumptions(building_type):
+def load_assumptions(building_type,assumption='base'):
     script_dir = os.path.dirname(__file__)
     project_root = os.path.dirname(script_dir)
     resc_path = os.path.join(project_root, 'resource')
-    assumption_path = os.path.join(resc_path, 'assumptions.csv')
     
-    df = pd.read_csv(assumption_path)
-    building_data = df[df['Building type'] == building_type]
-    parameters = building_data.drop(columns=['Building type']).iloc[0].to_dict()
+    parameters = []
+    if assumption == 'base':
+        assumption_path = os.path.join(resc_path, 'assumptions.csv')
+        df = pd.read_csv(assumption_path)
+        building_data = df[df['Building type'] == building_type]
+
+        # Convert to python objects
+        parameters = {
+            key: float(pd.to_numeric(pd.Series([value]), errors='coerce').iloc[0])
+            for key, value in building_data.drop(columns=['Building type']).iloc[0].to_dict().items()
+        }
+
+                
+    elif assumption == 'transport':
+        assumption_path = os.path.join(resc_path, 'transport_assumptions.csv')
+        df = pd.read_csv(assumption_path)
+        numeric_cols = ['Fraction', 'GHG Emissions', 'Distance']
+        for col in numeric_cols:
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+        df = df.set_index('Transport mode')
+        parameters = df.to_dict(orient='index')
+        
+            
+    elif assumption == 'embodied':
+        assumption_path = os.path.join(resc_path, 'embodied_assumptions.csv')
+        df = pd.read_csv(assumption_path)
+        values = df.iloc[0]
+        parameters = values.to_dict()  
     return parameters
     
 def load_baseline():

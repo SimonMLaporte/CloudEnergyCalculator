@@ -45,6 +45,10 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     gfa = inputJSON["gfa"]
     COP = inputJSON["COP"]
 
+
+    #Calculate OTTV & RTTV
+    OTTV, RTTV = calculate_OTTV(inputJSON)
+
     # Extract energy use
     annual_cooling_demand = round(sum(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_cooling_electricity = round(annual_cooling_demand/COP,2)
@@ -53,25 +57,25 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     annual_lift_electricity = round(sum(get_csv_data(result_file,"lifts:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_carpark_electricity = round(sum(get_csv_data(result_file,"carpark_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2) + round(sum(get_csv_data(result_file,"carpark_ventilation:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_outdoor_lighting_electricity = round(sum(get_csv_data(result_file,"facade_landscape_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
-    annual_total_electricity = annual_cooling_electricity + annual_equipment_electricity +annual_lighting_electricity+ annual_lift_electricity + annual_carpark_electricity + annual_outdoor_lighting_electricity
+    annual_total_electricity = round(annual_cooling_electricity + annual_equipment_electricity +annual_lighting_electricity+ annual_lift_electricity + annual_carpark_electricity + annual_outdoor_lighting_electricity,2)
     max_electricity_demand = round(max(get_csv_data(result_file,"Electricity:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     max_cooling_demands = round(max(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     
     
     #Extract EUI
     gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
-    EUI_submission = annual_total_electricity 
-    EUI_average = assumptions['Average Malaysian EUI (kWh/m2/year)']
-    EUI_threshold = assumptions['1-star threshold EUI (kWh/m2/year)']
+    EUI_submission = round(annual_total_electricity ,2)
+    EUI_average = float(assumptions['Average Malaysian EUI (kWh/m2/year)'])
+    EUI_threshold = float(assumptions['1-star threshold EUI (kWh/m2/year)'])
     
     #Extract carbon emissions
-    submission_operation = annual_total_electricity * gridFactor
-    submission_embodied = other_carbon['embodied_carbon']
-    submission_transport = other_carbon['transport_carbon']
-    average_operation =EUI_average * gridFactor
+    submission_operation = round(annual_total_electricity * gridFactor,2)
+    submission_embodied = round(other_carbon['embodied_carbon'],2)
+    submission_transport = round(other_carbon['transport_carbon'],2)
+    average_operation =round(EUI_average * gridFactor,2)
     average_embodied = 1
     average_transport = 1
-    threshold_operation = EUI_threshold * gridFactor
+    threshold_operation = round(EUI_threshold * gridFactor)
     threshold_embodied = 1
     threshold_transport = 1
     
@@ -86,19 +90,21 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
         "total_electricity":annual_total_electricity,
         "max_electricity_demand": max_electricity_demand,
         "max_cooling_demand_kW": max_cooling_demands,
-        "max_cooling_demand_RT": max_cooling_demands*0.284,
+        "max_cooling_demand_RT": round(max_cooling_demands*0.284,2),
         "EUI_submission": EUI_submission,
-        "EUI_average": EUI_average,
-        "EUI_threshold": EUI_threshold,
+        "EUI_average": round(EUI_average,2),
+        "EUI_threshold": round(EUI_threshold,2),
         "submission_operation": submission_operation,
         "submission_embodied": submission_embodied,
-        "submission_transport": submission_transport,
-        "average_operation": average_operation,
+        "submission_transport": round(float(submission_transport),2),
+        "average_operation": round(float(average_operation),2),
         "average_embodied": average_embodied,
         "average_transport": average_transport,
         "threshold_operation": threshold_operation,
         "threshold_embodied": threshold_embodied,
         "threshold_transport": threshold_transport,
+        "ottv": round(OTTV,2),
+        "rttv": round(RTTV,2)
         
     }
     with open(output_file_path, 'w') as output_file:
@@ -106,11 +112,150 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
         
     with open(assumptions_out_path, 'w') as output_file:
         json.dump(assumptions, output_file,indent=2)
-    
-    
-    return 0
+    return 1
 
 
 def get_csv_data(csv_path,header):
     df = pd.read_csv(csv_path)
     return df[header].tolist()
+
+def calculate_OTTV(input):
+    #formula from MS 1525:2014 clause 5.2.1
+    orientation_factor_dict = {
+                0: 0.9,
+                45: 1.09,
+                90: 1.23,
+                135: 1.13,
+                180: 0.92,
+                225: 0.9,
+                270: 0.94,
+                315: 0.9,
+                }
+    rotation_mapping_clockwise = {
+                "North": 0,
+                "North-East": 45,
+                "East": 90,
+                "South-East": 135,
+                "South": 180,
+                "South-West": 225,
+                "West": 270,
+                "North-West": 315,
+                }
+    direction1 = rotation_mapping_clockwise[input["facade1_orientation"]]
+    direction2 = direction1 + 90
+    direction3 = direction2 + 90
+    direction4 = direction3 + 90
+    area1 = input['facade1_width']*input['height']
+    area2 = input['facade2_width']*input['height']
+    area3 = area1
+    area4 = area2
+    total_area = area1 + area2 + area3 + area4
+    #Calculate shading coefficient
+    sc_1 = OTTV_shading_coefficient(input['1_glass_sc'],input['1_overhang_depth'],input['1_window_height'],input['1_window_width'],input['1_z_offset'],input['1_sidefin_depth'],direction1)
+    sc_2 = OTTV_shading_coefficient(input['2_glass_sc'],input['2_overhang_depth'],input['2_window_height'],input['2_window_width'],input['2_z_offset'],input['2_sidefin_depth'],direction2)
+    sc_3 = OTTV_shading_coefficient(input['3_glass_sc'],input['3_overhang_depth'],input['3_window_height'],input['3_window_width'],input['3_z_offset'],input['3_sidefin_depth'],direction3)
+    sc_4 = OTTV_shading_coefficient(input['4_glass_sc'],input['4_overhang_depth'],input['4_window_height'],input['4_window_width'],input['4_z_offset'],input['4_sidefin_depth'],direction4)
+    
+    #Calculate OTTV
+    OTTV1 = 15*input['1_albedo']*(1-input['1_WWR'])*input['1_wall_u']+ 6*(input['1_WWR']*input['1_glass_u']+(194*orientation_factor_dict[direction1]*input['1_WWR']*sc_1))
+    OTTV2 = 15*input['2_albedo']*(1-input['2_WWR'])*input['2_wall_u']+ 6*(input['2_WWR']*input['2_glass_u']+(194*orientation_factor_dict[direction2]*input['2_WWR']*sc_2))
+    OTTV3 = 15*input['3_albedo']*(1-input['3_WWR'])*input['3_wall_u']+ 6*(input['3_WWR']*input['3_glass_u']+(194*orientation_factor_dict[direction3]*input['3_WWR']*sc_3))
+    OTTV4 = 15*input['4_albedo']*(1-input['4_WWR'])*input['4_wall_u']+ 6*(input['4_WWR']*input['4_glass_u']+(194*orientation_factor_dict[direction4]*input['4_WWR']*sc_4))
+    OTTV = ((area1 * OTTV1)+ (area2*OTTV2) + (area3*OTTV3) + (area4*OTTV4) )/total_area
+    
+    #Calculate RTTV
+    area_roof = input['facade1_width'] * input['facade2_width']
+    u_roof = input['roof_u']
+    #Assuming heavy roof
+    equivilent_temp_difference = 24 #from standard
+    skylight_area = area_roof * input['roof_WWR']
+    opaque_area = area_roof - skylight_area
+    skylight_u = input['roof_glass_u']
+    skylight_sc = input['roof_glass_sc']
+    design_temperature_difference = 5 #standard from code
+    solar_factor = 323 # from standard for flat roof
+    
+    RTTV = ((opaque_area * u_roof*equivilent_temp_difference)+(skylight_u*skylight_area*design_temperature_difference)+(skylight_area*solar_factor*skylight_sc))/area_roof
+    
+    return OTTV,RTTV
+
+def OTTV_shading_coefficient(glass_sc,overhang_depth,window_height,window_width,z_offset,side_fin_depth,direction):
+    sc1 = glass_sc
+    R1 = overhang_depth/(window_height+z_offset)
+    R2 = side_fin_depth/window_width
+    #maps index for orienttation in degrees clockwise to array of shading factors
+    orientation_factor_dict = {
+            0: 1, #N
+            45: 4, #NE
+            90: 3, #E
+            135: 5, #SE
+            180: 1, #S
+            225: 4, #SW
+            270: 3, #W
+            315: 5, #NW
+            }
+    #R1 value table from reference
+    SC2_r1_values = [
+    [0.77, 0.71, 0.67, 0.65],   # N/S
+    [0.77, 0.68, 0.6, 0.55],   # East
+    [0.79, 0.71, 0.65, 0.61],   # West
+    [0.77, 0.69, 0.63, 0.6], #NE/SW
+    [0.79, 0.72, 0.66, 0.63] #NW/SE
+    ]
+    SC2_r2_values = [
+    [0.82, 0.77, 0.73, 0.7],   # N/S
+    [0.82, 0.82, 0.78, 0.75],   # East
+    [0.86, 0.81, 0.77, 0.74],   # West
+    [0.83, 0.77, 0.72, 0.69], #NE/SW
+    [0.84, 0.79, 0.74, 0.71] #NW/SE
+    ]
+    column_ranges = [
+    (0.3, 0.45),
+    (0.45, 0.75),
+    (0.75, 1.25),
+    (1.25, 2.0)
+    ]
+    orientation = orientation_factor_dict[direction]
+    
+    sc2_r1 = get_row_by_value_and_ranges(SC2_r1_values, R1, orientation, column_ranges)
+    sc2_r2 = get_row_by_value_and_ranges(SC2_r2_values, R2, orientation, column_ranges)
+    sc2 = min(sc2_r1,sc2_r2)
+    return sc1 * sc2
+
+def get_row_by_value_and_ranges(arr_2d, value, row_index, ranges):
+    """
+    Returns a specific row from a 2D array based on a value falling within defined ranges.
+
+    Args:
+        arr_2d (list of lists): The 2D array.
+        value (float or int): The value to check against the ranges.
+        row_index (int): The index of the row to return (y).
+        ranges (list of tuples): A list of tuples, where each tuple defines a range
+                                 (min_inclusive, max_exclusive).
+                                 The index of the tuple corresponds to the column index.
+
+    Returns:
+        list: The specified row from the 2D array, or 1 if the value
+              doesn't fall into any defined range or if the row_index is out of bounds.
+    """
+    col_to_return = -1  # Initialize with an invalid column index
+
+    for i, (min_val, max_val) in enumerate(ranges):
+        if min_val <= value < max_val:
+            col_to_return = i
+            break
+
+    if col_to_return == -1:
+        print(f"Error: Value {value} does not fall into any defined range.")
+        return 1
+
+    if not (0 <= row_index < len(arr_2d)):
+        print(f"Error: Row index {row_index} is out of bounds for the array.")
+        return 1
+
+    # Extract the value at the found column for the specified row
+    if col_to_return < len(arr_2d[row_index]):
+        return arr_2d[row_index][col_to_return]
+    else:
+        print(f"Error: Column {col_to_return} is out of bounds for row {row_index}.")
+        return 1

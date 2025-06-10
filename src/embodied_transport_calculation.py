@@ -1,66 +1,69 @@
 from generate_idf import load_assumptions
 
-def transport_calc(input,build_area,total_pax):
-
+def transport_calc(assumption,build_area,total_pax,input):
+ 
     if input['building_type'] == 'office':
-        #kgco2/km - this should be assumptions 
-        car_emission_factor = 1
-        motor_emission_factor = 1
-        lowCo2_emission_factor =1
-        diversity_factor = 1
+        #segment assumptions
+        car = assumption['Car']
+        motor = assumption['Motorcycle']
+        bus = assumption['Bus']
+        rail = assumption['Rail']
+        walk = assumption['Walk/Cycle']
+        
         annual_commute_days = 200    
-        annual_transport_emissions = total_pax * diversity_factor * annual_commute_days*(input['commute_by_car'] * input['commute_distance_by_car']* motor_emission_factor
-                                    +input['commute_by_car'] * input['commute_distance_by_car'] * car_emission_factor
-                                    +input['commutelow3Co2']* input['commute_distance_by_lowCo2'] *lowCo2_emission_factor)/build_area
+        #one way emissions
+        annual_transport_emissions = total_pax *annual_commute_days*(car['Fraction'] * car['GHG Emissions']*car['Distance']+
+                                                                     motor['Fraction'] * motor['GHG Emissions']*motor['Distance']+
+                                                                     bus['Fraction'] * bus['GHG Emissions']*bus['Distance']+
+                                                                     rail['Fraction'] * rail['GHG Emissions']*rail['Distance']+
+                                                                     walk['Fraction'] * walk['GHG Emissions']*walk['Distance']
+                                                                     )/build_area/2
         
         return annual_transport_emissions
     else:
         return 'not valid for building type'
     
 
-def embodied_calc(input,build_area):
-    # kgCo2e/ton - get malaysian values - this should be in assumptions
-    carbon_emission_factor_steel = 1
-    carbon_emission_factor_concrete = 1
-    carbon_emission_factor_timber = 1
+def embodied_calc(assumptions,build_area,input):
+    # kgCo2e/ton
+    rc = assumptions['Concrete + rebar'] * 1000
+    green_rc = assumptions['Green concrete + rebar']  * 1000
+    steel = assumptions['Steel']  * 1000
+    green_steel = assumptions['Green steel']  * 1000
+    glu_lam = assumptions['Glu-lam']  * 1000
+    
+    
     
     # building life-span in years
-    building_lifespan = {
-        'reinforced_concrete': 1, 
-        'steel': 1,
-        'low_strucutral_wood': 1,
-        'high_structural_wood': 1
-    }
-    
-    green_concrete_emission_factor = 1
-    green_steel_emission_factor = 1
+    building_lifespan = 50
     
     build_area = input['gfa'] + input['carpark_area_above_ground'] + input['carpark_area_above_ground']
     
-    steel_emissions = carbon_emission_factor_steel * input['steel_usage'] * (1-input['green_steel_percent'])+ green_steel_emission_factor * input['green_steel_percent'] * input['steel_usage']
-    concrete_emissions = carbon_emission_factor_concrete * input['concrete_usage'] * (1-input['green_concrete_percent']) + green_concrete_emission_factor * input['green_concrete_percent'] * input['concrete_usage']
-    timber_emissions = carbon_emission_factor_timber * input['timber_usage']
+    steel_emissions = steel * input['steel_usage'] * (1-input['green_steel_percent'])+ green_steel* input['green_steel_percent'] * input['steel_usage']
+    concrete_emissions = rc * input['concrete_usage'] * (1-input['green_concrete_percent']) + green_rc * input['green_concrete_percent'] * input['concrete_usage']
+    timber_emissions = glu_lam * input['timber_usage']
 
-    total_annual_emissions =  ((steel_emissions + concrete_emissions + timber_emissions)/build_area) / building_lifespan[input['structural_system']]
+    total_annual_emissions =  ((steel_emissions + concrete_emissions + timber_emissions)/build_area) / building_lifespan
     return total_annual_emissions
 
     
     
 def embodied_transport_emissions(input):
     build_area = input['gfa'] + input['carpark_area_above_ground'] + input['carpark_area_above_ground']
-    people_density = load_assumptions(input['building_type'])
-    total_pax =  people_density * input['gfa']
+    assumptions = load_assumptions(input['building_type'])
+    transport_assumptions = load_assumptions(input['building_type'],'transport')
+    embodied_assumptions = load_assumptions(input['building_type'],'embodied')
+    total_pax =   input['gfa'] /assumptions['People density (m2/pax AC area)']
     
     
-    embodied_carbon = embodied_calc(input, build_area)
-    transport_carbon = transport_calc(input,build_area,total_pax)
+    embodied_carbon = embodied_calc(embodied_assumptions, build_area,input)
+    transport_carbon = transport_calc(transport_assumptions,build_area,total_pax,input)
     
     
     other_carbon = {
         "embodied_carbon": embodied_carbon,
         "transport_carbon": transport_carbon,
-        "transport_carbon": transport_carbon,
     }
     
     return other_carbon
-    
+

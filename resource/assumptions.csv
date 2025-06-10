@@ -1,8 +1,9 @@
-﻿Building type,Equipment (W/m2),Lift (W/m2),Facade lighting (W/m2),Landscape lighting (W/m2),"Carpark ventilation, above ground (W/m2)","Carpark lighting, above ground (W/m2)","Carpark ventilation, below ground (W/m2)",Fresh Air Rate per Floor Area (l/s/m2),Fresh Air Rate per person (l/s),"Carpark lighting, below ground (W/m2)",CO2 sensor setpoint  (ppm),People density (pax/m2 AC area),"People diversity, 0-1",Weekly operational hours of main AC system (hours/week),Average Malaysian EUI (kWh/m2/year),1-star threshold EUI (kWh/m2/year),Grid pollution (kgCO2e/kWh)
-office,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,0.04,1,52,135,200,0.78
-retail_hyper,8,1,2.2,0.43,0,1.6,1,0.3,3.8,1.6,1000,0.02,1,84,240,290,0.78
-retail_center,8,1,2.2,0.43,0,1.6,1,0.3,3.8,1.6,1000,0.02,1,84,335,370,0.78
-hotel_4star,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,0.0072,1,,210,290,0.78
-healthcare_limited,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,0.048,1,168,200,250,0.78
-healthcare_major,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,0.048,1,168,285,350,0.78
-residential,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,0.04,1,14,42,55,0.78
+﻿Building type,Equipment (W/m2),Lift (W/m2),Facade lighting (W/m2),Landscape lighting (W/m2),"Carpark ventilation, above ground (W/m2)","Carpark lighting, above ground (W/m2)","Carpark ventilation, below ground (W/m2)",Fresh Air Rate per Floor Area (l/s/m2),Fresh Air Rate per person (l/s),"Carpark lighting, below ground (W/m2)",CO2 sensor setpoint  (ppm),People density (m2/pax AC area),"People diversity, 0-1",Weekly operational hours of main AC system (hours/week),Average Malaysian EUI (kWh/m2/year),1-star threshold EUI (kWh/m2/year),Grid pollution (kgCO2e/kWh)
+office,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,23,1,52,135,200,0.78
+retail_hyper,8,1,2.2,0.43,0,1.6,1,0.3,3.8,1.6,1000,51,1,84,240,290,0.78
+retail_center,8,1,2.2,0.43,0,1.6,1,0.3,3.8,1.6,1000,51,1,84,335,370,0.78
+hotel_4star,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,139,1,168,210,290,0.78
+healthcare_limited,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,21,1,168,200,250,0.78
+healthcare_major,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,21,1,168,285,350,0.78
+residential,8,1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,23,1,14,42,55,0.78
+Source,Internal,,ASHRAE 90.1 - 2016 Section 9 as building facade zone 4,ASHRAE 90.1 - 2016 Section 9 as landscaping zone 4,,ASHRAE 90.1 - 2016 Section 9 .5.1 as parking garage,,ASHRAE 62.1 - 2016,ASHRAE 62.1 - 2016,,,https://www.usgbc.org/credits/new-construction-existing-buildings-commercial-interiors-core-and-shell-schools-new-constr-3,,Internal,Internal,Internal,Internal

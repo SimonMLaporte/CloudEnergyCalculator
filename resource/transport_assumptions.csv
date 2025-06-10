@@ -1,0 +1,8 @@
+﻿Transport mode,Fraction,GHG Emissions,Distance
+Car,0.6200,0.161664667,55.33045076
+Motorcycle,0.3026,0.130557516,52.59306832
+Taxi/e-hailing,0.0184,0.120649313,51.52727273
+Bus,0.0088,0.091690388,51.8030303
+Rail,0.0498,0.02963049,57.95286195
+Walk/Cycle,0.0004,0,47.27272727
+Unit,-,kg CO2e/km,km/staff/workday
