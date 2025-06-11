@@ -21,7 +21,7 @@ def generate_idf(inputJson):
     width = inputJson["facade1_width"]
     length = inputJson["facade2_width"]
     height =inputJson["height"]
-    facade_area = width *height *2 + length * height
+    facade_area = width *height *2 + length * height *2
     gfa = inputJson['gfa']
     n_WWR = inputJson["1_WWR"]
     e_WWR = inputJson["2_WWR"]
@@ -145,16 +145,17 @@ def add_window(wallID,WWR,idf):
             selected = s
     windowheight=selected.height*WWR
 
-    idf.newidfobject(
-        'WINDOW',
-        Name=wallID + "_window",
-        Construction_Name='window',
-        Building_Surface_Name=wallID,
-        Starting_X_Coordinate=0,
-        Starting_Z_Coordinate=0,
-        Length=selected.width,
-        Height=windowheight
-        )
+    if WWR>0:
+        idf.newidfobject(
+            'WINDOW',
+            Name=wallID + "_window",
+            Construction_Name='window',
+            Building_Surface_Name=wallID,
+            Starting_X_Coordinate=0,
+            Starting_Z_Coordinate=0,
+            Length=selected.width,
+            Height=windowheight
+            )
     return wallID + "_window"
 
 def set_construction(idf, wallID,windowID, Uvalue, albedo, glassSC, glassU):

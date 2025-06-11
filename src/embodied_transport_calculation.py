@@ -32,8 +32,6 @@ def embodied_calc(assumptions,build_area,input):
     green_steel = assumptions['Green steel']  * 1000
     glu_lam = assumptions['Glu-lam']  * 1000
     
-    
-    
     # building life-span in years
     building_lifespan = 50
     

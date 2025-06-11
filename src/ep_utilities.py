@@ -2,6 +2,7 @@ import csv
 import matplotlib.pyplot as plt
 import os
 import math
+from statistics import quantiles
 import pandas as pd
 import json
 
@@ -58,9 +59,16 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     annual_carpark_electricity = round(sum(get_csv_data(result_file,"carpark_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2) + round(sum(get_csv_data(result_file,"carpark_ventilation:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_outdoor_lighting_electricity = round(sum(get_csv_data(result_file,"facade_landscape_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_total_electricity = round(annual_cooling_electricity + annual_equipment_electricity +annual_lighting_electricity+ annual_lift_electricity + annual_carpark_electricity + annual_outdoor_lighting_electricity,2)
-    max_electricity_demand = round(max(get_csv_data(result_file,"Electricity:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
-    max_cooling_demands = round(max(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     
+    
+    
+    max_electricity_demand = round(max(get_csv_data(result_file,"Electricity:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
+    
+    #get the 98th percentile chiller load
+    all_cooling_demands = get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)")
+    #remove zero cooling hours
+    only_cooling_demands = [i for i in all_cooling_demands if i != 0]
+    max_cooling_demands = quantiles(only_cooling_demands, n=100)[98]*2.78*math.pow(10,-7)
     
     #Extract EUI
     gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
@@ -157,10 +165,10 @@ def calculate_OTTV(input):
     sc_4 = OTTV_shading_coefficient(input['4_glass_sc'],input['4_overhang_depth'],input['4_window_height'],input['4_window_width'],input['4_z_offset'],input['4_sidefin_depth'],direction4)
     
     #Calculate OTTV
-    OTTV1 = 15*input['1_albedo']*(1-input['1_WWR'])*input['1_wall_u']+ 6*(input['1_WWR']*input['1_glass_u']+(194*orientation_factor_dict[direction1]*input['1_WWR']*sc_1))
-    OTTV2 = 15*input['2_albedo']*(1-input['2_WWR'])*input['2_wall_u']+ 6*(input['2_WWR']*input['2_glass_u']+(194*orientation_factor_dict[direction2]*input['2_WWR']*sc_2))
-    OTTV3 = 15*input['3_albedo']*(1-input['3_WWR'])*input['3_wall_u']+ 6*(input['3_WWR']*input['3_glass_u']+(194*orientation_factor_dict[direction3]*input['3_WWR']*sc_3))
-    OTTV4 = 15*input['4_albedo']*(1-input['4_WWR'])*input['4_wall_u']+ 6*(input['4_WWR']*input['4_glass_u']+(194*orientation_factor_dict[direction4]*input['4_WWR']*sc_4))
+    OTTV1 = 15*input['1_albedo']*(1-input['1_WWR'])*input['1_wall_u']+ 6*input['1_WWR']*input['1_glass_u']+(194*orientation_factor_dict[direction1]*input['1_WWR']*sc_1)
+    OTTV2 = 15*input['2_albedo']*(1-input['2_WWR'])*input['2_wall_u']+ 6*input['2_WWR']*input['2_glass_u']+(194*orientation_factor_dict[direction2]*input['2_WWR']*sc_2)
+    OTTV3 = 15*input['3_albedo']*(1-input['3_WWR'])*input['3_wall_u']+ 6*input['3_WWR']*input['3_glass_u']+(194*orientation_factor_dict[direction3]*input['3_WWR']*sc_3)
+    OTTV4 = 15*input['4_albedo']*(1-input['4_WWR'])*input['4_wall_u']+ 6*input['4_WWR']*input['4_glass_u']+(194*orientation_factor_dict[direction4]*input['4_WWR']*sc_4)
     OTTV = ((area1 * OTTV1)+ (area2*OTTV2) + (area3*OTTV3) + (area4*OTTV4) )/total_area
     
     #Calculate RTTV

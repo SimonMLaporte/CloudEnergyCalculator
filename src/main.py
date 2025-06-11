@@ -10,13 +10,13 @@ import os
 script_dir = os.path.dirname(__file__)
 project_root = os.path.dirname(script_dir)
 json_file_dir= os.path.join(project_root, 'resource')
-debugJSON = os.path.join(json_file_dir, 'sample_input.json')
+debugJSON = os.path.join(json_file_dir, 'benchmark_building.json')
 f = open(debugJSON)
 inputJSON = json.load(f)
 
 #run script
 assumptions = generate_idf(inputJSON)
-#run_energyplus()
+run_energyplus()
 other_carbon = embodied_transport_emissions(inputJSON)
 extract_ep_results(inputJSON, assumptions, other_carbon)
 debug_show_ep_results()
