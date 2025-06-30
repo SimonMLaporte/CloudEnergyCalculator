@@ -1,2 +1,8 @@
-﻿Source,unit,Concrete + rebar,Green concrete + rebar,Steel,Green steel,Glu-lam,source
-Emission factor,kgCO2e/kg,0.25,0.22,2.94,1.12,-0.72,Singapore BCA calculator
+﻿data,Emission factor,office,retail_hyper,retail_center,hotel_4star,healthcare_limited,healthcare_major,residential
+unit,kgCO2e/kg,kg/m2,kg/m2,kg/m2,kg/m2,kg/m2,kg/m2,kg/m2
+Concrete + rebar,0.25,720,720,720,720,720,720,720
+Green concrete + rebar,0.22,0,0,0,0,0,0,0
+Steel,2.94,0,0,0,0,0,0,0
+Green steel,1.12,0,0,0,0,0,0,0
+Glu-lam,-0.72,0,0,0,0,0,0,0
+source,Singapore BCA calculator,Intenal,Intenal,Intenal,Intenal,Intenal,Intenal,Intenal

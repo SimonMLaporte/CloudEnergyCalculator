@@ -306,8 +306,8 @@ def load_assumptions(building_type,assumption='base'):
     elif assumption == 'embodied':
         assumption_path = os.path.join(resc_path, 'embodied_assumptions.csv')
         df = pd.read_csv(assumption_path)
-        values = df.iloc[0]
-        parameters = values.to_dict()  
+        df = df.set_index('data')
+        parameters = df.to_dict()  
     return parameters
     
 def load_baseline():

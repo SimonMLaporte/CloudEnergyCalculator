@@ -5,3 +5,4 @@ output
 !/ouput/used_assumptions.json
 docs
 /resource/generated.idf
+TODO.txt

@@ -71,14 +71,14 @@
   "renewable_energy": 0,
 
   "structural_system": "reinforced_concrete",
-  "concrete_usage": 100,
-  "steel_usage": 100,
+  "concrete_usage": 50000,
+  "steel_usage": 1000,
   "green_concrete_percent": 0,
   "green_steel_percent": 0,
   "timber_usage": 1,
 
-  "commute_by_car": 70,
-  "commute_by_motor_bike": 30,
+  "commute_by_car": 0.70,
+  "commute_by_motor_bike": 0.30,
   "commute_by_lowCo2": 0,
   "commute_distance_by_car": 10,
   "commute_distance_by_motor_bike": 10,
