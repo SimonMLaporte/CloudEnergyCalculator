@@ -590,7 +590,7 @@ Zone,
     0,                       !- Direction of Relative North {deg}
     0,                       !- X Origin {m}
     0,                       !- Y Origin {m}
-    -20,                     !- Z Origin {m}
+    -200,                    !- Z Origin {m}
     1,                       !- Type
     1,                       !- Multiplier
     autocalculate,           !- Ceiling Height {m}
@@ -767,16 +767,16 @@ BuildingSurface:Detailed,
     autocalculate,           !- Number of Vertices
     0,                       !- Vertex 1 X-coordinate {m}
     0,                       !- Vertex 1 Y-coordinate {m}
-    -10,                     !- Vertex 1 Z-coordinate {m}
+    -200,                    !- Vertex 1 Z-coordinate {m}
     0,                       !- Vertex 2 X-coordinate {m}
     1,                       !- Vertex 2 Y-coordinate {m}
-    -10,                     !- Vertex 2 Z-coordinate {m}
+    -200,                    !- Vertex 2 Z-coordinate {m}
     1,                       !- Vertex 3 X-coordinate {m}
     1,                       !- Vertex 3 Y-coordinate {m}
-    -10,                     !- Vertex 3 Z-coordinate {m}
-    1,                       !- Vertex 4 X-coordinate {m}
+    -200,                    !- Vertex 3 Z-coordinate {m}
+    100,                     !- Vertex 4 X-coordinate {m}
     0,                       !- Vertex 4 Y-coordinate {m}
-    -10;                     !- Vertex 4 Z-coordinate {m}
+    -200;                    !- Vertex 4 Z-coordinate {m}
 
 BuildingSurface:Detailed,
     dummy_s,                 !- Name
@@ -792,16 +792,16 @@ BuildingSurface:Detailed,
     autocalculate,           !- Number of Vertices
     0,                       !- Vertex 1 X-coordinate {m}
     0,                       !- Vertex 1 Y-coordinate {m}
-    -9,                      !- Vertex 1 Z-coordinate {m}
+    -100,                    !- Vertex 1 Z-coordinate {m}
     0,                       !- Vertex 2 X-coordinate {m}
     0,                       !- Vertex 2 Y-coordinate {m}
-    -10,                     !- Vertex 2 Z-coordinate {m}
-    1,                       !- Vertex 3 X-coordinate {m}
+    -200,                    !- Vertex 2 Z-coordinate {m}
+    100,                     !- Vertex 3 X-coordinate {m}
     0,                       !- Vertex 3 Y-coordinate {m}
-    -10,                     !- Vertex 3 Z-coordinate {m}
-    1,                       !- Vertex 4 X-coordinate {m}
+    -200,                    !- Vertex 3 Z-coordinate {m}
+    100,                     !- Vertex 4 X-coordinate {m}
     0,                       !- Vertex 4 Y-coordinate {m}
-    -9;                      !- Vertex 4 Z-coordinate {m}
+    -100;                    !- Vertex 4 Z-coordinate {m}
 
 BuildingSurface:Detailed,
     dummy_e,                 !- Name
@@ -815,18 +815,18 @@ BuildingSurface:Detailed,
     NoWind,                  !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     autocalculate,           !- Number of Vertices
-    1,                       !- Vertex 1 X-coordinate {m}
+    100,                     !- Vertex 1 X-coordinate {m}
     0,                       !- Vertex 1 Y-coordinate {m}
-    -9,                      !- Vertex 1 Z-coordinate {m}
-    1,                       !- Vertex 2 X-coordinate {m}
+    -100,                    !- Vertex 1 Z-coordinate {m}
+    100,                     !- Vertex 2 X-coordinate {m}
     0,                       !- Vertex 2 Y-coordinate {m}
-    -10,                     !- Vertex 2 Z-coordinate {m}
-    1,                       !- Vertex 3 X-coordinate {m}
-    1,                       !- Vertex 3 Y-coordinate {m}
-    -10,                     !- Vertex 3 Z-coordinate {m}
-    1,                       !- Vertex 4 X-coordinate {m}
-    1,                       !- Vertex 4 Y-coordinate {m}
-    -9;                      !- Vertex 4 Z-coordinate {m}
+    -200,                    !- Vertex 2 Z-coordinate {m}
+    100,                     !- Vertex 3 X-coordinate {m}
+    100,                     !- Vertex 3 Y-coordinate {m}
+    -200,                    !- Vertex 3 Z-coordinate {m}
+    100,                     !- Vertex 4 X-coordinate {m}
+    100,                     !- Vertex 4 Y-coordinate {m}
+    -100;                    !- Vertex 4 Z-coordinate {m}
 
 BuildingSurface:Detailed,
     dummy_n,                 !- Name
@@ -840,18 +840,18 @@ BuildingSurface:Detailed,
     NoWind,                  !- Wind Exposure
     autocalculate,           !- View Factor to Ground
     autocalculate,           !- Number of Vertices
-    1,                       !- Vertex 1 X-coordinate {m}
-    1,                       !- Vertex 1 Y-coordinate {m}
-    -9,                      !- Vertex 1 Z-coordinate {m}
-    1,                       !- Vertex 2 X-coordinate {m}
-    1,                       !- Vertex 2 Y-coordinate {m}
-    -10,                     !- Vertex 2 Z-coordinate {m}
+    100,                     !- Vertex 1 X-coordinate {m}
+    100,                     !- Vertex 1 Y-coordinate {m}
+    -100,                    !- Vertex 1 Z-coordinate {m}
+    100,                     !- Vertex 2 X-coordinate {m}
+    100,                     !- Vertex 2 Y-coordinate {m}
+    -200,                    !- Vertex 2 Z-coordinate {m}
     0,                       !- Vertex 3 X-coordinate {m}
-    1,                       !- Vertex 3 Y-coordinate {m}
-    -10,                     !- Vertex 3 Z-coordinate {m}
+    100,                     !- Vertex 3 Y-coordinate {m}
+    -200,                    !- Vertex 3 Z-coordinate {m}
     0,                       !- Vertex 4 X-coordinate {m}
-    1,                       !- Vertex 4 Y-coordinate {m}
-    -9;                      !- Vertex 4 Z-coordinate {m}
+    100,                     !- Vertex 4 Y-coordinate {m}
+    -100;                    !- Vertex 4 Z-coordinate {m}
 
 BuildingSurface:Detailed,
     dummy_w,                 !- Name
@@ -866,17 +866,17 @@ BuildingSurface:Detailed,
     autocalculate,           !- View Factor to Ground
     autocalculate,           !- Number of Vertices
     0,                       !- Vertex 1 X-coordinate {m}
-    1,                       !- Vertex 1 Y-coordinate {m}
-    -9,                      !- Vertex 1 Z-coordinate {m}
+    100,                     !- Vertex 1 Y-coordinate {m}
+    -100,                    !- Vertex 1 Z-coordinate {m}
     0,                       !- Vertex 2 X-coordinate {m}
-    1,                       !- Vertex 2 Y-coordinate {m}
-    -10,                     !- Vertex 2 Z-coordinate {m}
+    100,                     !- Vertex 2 Y-coordinate {m}
+    -200,                    !- Vertex 2 Z-coordinate {m}
     0,                       !- Vertex 3 X-coordinate {m}
     0,                       !- Vertex 3 Y-coordinate {m}
-    -10,                     !- Vertex 3 Z-coordinate {m}
+    -200,                    !- Vertex 3 Z-coordinate {m}
     0,                       !- Vertex 4 X-coordinate {m}
     0,                       !- Vertex 4 Y-coordinate {m}
-    -9;                      !- Vertex 4 Z-coordinate {m}
+    -100;                    !- Vertex 4 Z-coordinate {m}
 
 BuildingSurface:Detailed,
     dummy_roof,              !- Name
@@ -892,16 +892,16 @@ BuildingSurface:Detailed,
     autocalculate,           !- Number of Vertices
     0,                       !- Vertex 1 X-coordinate {m}
     0,                       !- Vertex 1 Y-coordinate {m}
-    -9,                      !- Vertex 1 Z-coordinate {m}
-    1,                       !- Vertex 2 X-coordinate {m}
+    -100,                    !- Vertex 1 Z-coordinate {m}
+    100,                     !- Vertex 2 X-coordinate {m}
     0,                       !- Vertex 2 Y-coordinate {m}
-    -9,                      !- Vertex 2 Z-coordinate {m}
-    1,                       !- Vertex 3 X-coordinate {m}
-    1,                       !- Vertex 3 Y-coordinate {m}
-    -9,                      !- Vertex 3 Z-coordinate {m}
+    -100,                    !- Vertex 2 Z-coordinate {m}
+    100,                     !- Vertex 3 X-coordinate {m}
+    100,                     !- Vertex 3 Y-coordinate {m}
+    -100,                    !- Vertex 3 Z-coordinate {m}
     0,                       !- Vertex 4 X-coordinate {m}
     1,                       !- Vertex 4 Y-coordinate {m}
-    -9;                      !- Vertex 4 Z-coordinate {m}
+    -100;                    !- Vertex 4 Z-coordinate {m}
 
 
 !-   ===========  ALL OBJECTS IN CLASS: PEOPLE ===========
