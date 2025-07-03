@@ -238,7 +238,7 @@ def set_building_dimensions(idf,length,width,height,orientation):
     angle = rotationMapping[orientation]
     idf.rotate(angle)
     
-    scaleX = width/10
+    scaleX = width/10 #starting dimensions are 10m x 10m x 10m
     scaleY= length/10
     scaleZ=height/10
     idf.scale(scaleX,axes='x')

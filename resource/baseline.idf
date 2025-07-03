@@ -769,10 +769,10 @@ BuildingSurface:Detailed,
     0,                       !- Vertex 1 Y-coordinate {m}
     -200,                    !- Vertex 1 Z-coordinate {m}
     0,                       !- Vertex 2 X-coordinate {m}
-    1,                       !- Vertex 2 Y-coordinate {m}
+    100,                     !- Vertex 2 Y-coordinate {m}
     -200,                    !- Vertex 2 Z-coordinate {m}
-    1,                       !- Vertex 3 X-coordinate {m}
-    1,                       !- Vertex 3 Y-coordinate {m}
+    100,                     !- Vertex 3 X-coordinate {m}
+    100,                     !- Vertex 3 Y-coordinate {m}
     -200,                    !- Vertex 3 Z-coordinate {m}
     100,                     !- Vertex 4 X-coordinate {m}
     0,                       !- Vertex 4 Y-coordinate {m}
@@ -900,7 +900,7 @@ BuildingSurface:Detailed,
     100,                     !- Vertex 3 Y-coordinate {m}
     -100,                    !- Vertex 3 Z-coordinate {m}
     0,                       !- Vertex 4 X-coordinate {m}
-    1,                       !- Vertex 4 Y-coordinate {m}
+    100,                     !- Vertex 4 Y-coordinate {m}
     -100;                    !- Vertex 4 Z-coordinate {m}
 
 
@@ -1010,6 +1010,13 @@ ZoneControl:Thermostat,
     ThermostatSetpoint:SingleCooling,  !- Control 1 Object Type
     cooling_setpoint;        !- Control 1 Name
 
+ZoneControl:Thermostat,
+    dummy,                   !- Name
+    dummyBlock,              !- Zone or ZoneList Name
+    cooling_control,         !- Control Type Schedule Name
+    ThermostatSetpoint:SingleCooling,  !- Control 1 Object Type
+    cooling_setpoint;        !- Control 1 Name
+
 
 !-   ===========  ALL OBJECTS IN CLASS: THERMOSTATSETPOINT:SINGLECOOLING ===========
 
@@ -1049,6 +1056,35 @@ ZoneHVAC:IdealLoadsAirSystem,
     0,                       !- Sensible Heat Recovery Effectiveness {dimensionless}
     0;                       !- Latent Heat Recovery Effectiveness {dimensionless}
 
+ZoneHVAC:IdealLoadsAirSystem,
+    dummy_cooling,           !- Name
+    alwaysON,                !- Availability Schedule Name
+    dummy_inlet,             !- Zone Supply Air Node Name
+    ,                        !- Zone Exhaust Air Node Name
+    inlet_dummy_system,      !- System Inlet Air Node Name
+    50,                      !- Maximum Heating Supply Air Temperature {C}
+    13,                      !- Minimum Cooling Supply Air Temperature {C}
+    0.0156,                  !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.0077,                  !- Minimum Cooling Supply Air Humidity Ratio {kgWater/kgDryAir}
+    NoLimit,                 !- Heating Limit
+    ,                        !- Maximum Heating Air Flow Rate {m3/s}
+    ,                        !- Maximum Sensible Heating Capacity {W}
+    NoLimit,                 !- Cooling Limit
+    ,                        !- Maximum Cooling Air Flow Rate {m3/s}
+    ,                        !- Maximum Total Cooling Capacity {W}
+    ,                        !- Heating Availability Schedule Name
+    ,                        !- Cooling Availability Schedule Name
+    ConstantSensibleHeatRatio,  !- Dehumidification Control Type
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
+    None,                    !- Humidification Control Type
+    ,                        !- Design Specification Outdoor Air Object Name
+    ,                        !- Outdoor Air Inlet Node Name
+    None,                    !- Demand Controlled Ventilation Type
+    NoEconomizer,            !- Outdoor Air Economizer Type
+    None,                    !- Heat Recovery Type
+    0,                       !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0;                       !- Latent Heat Recovery Effectiveness {dimensionless}
+
 
 !-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:EQUIPMENTLIST ===========
 
@@ -1057,6 +1093,16 @@ ZoneHVAC:EquipmentList,
     SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ideal_cooling,           !- Zone Equipment 1 Name
+    1,                       !- Zone Equipment 1 Cooling Sequence
+    0,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
+
+ZoneHVAC:EquipmentList,
+    dummy,                   !- Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
+    dummy_cooling,           !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     0,                       !- Zone Equipment 1 Heating or No-Load Sequence
     ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
@@ -1072,6 +1118,14 @@ ZoneHVAC:EquipmentConnections,
     ,                        !- Zone Air Exhaust Node or NodeList Name
     zone,                    !- Zone Air Node Name
     Zone_return;             !- Zone Return Air Node or NodeList Name
+
+ZoneHVAC:EquipmentConnections,
+    dummyBlock,              !- Zone Name
+    dummy,                   !- Zone Conditioning Equipment List Name
+    dummy_inlet,             !- Zone Air Inlet Node or NodeList Name
+    ,                        !- Zone Air Exhaust Node or NodeList Name
+    dummy_zone,              !- Zone Air Node Name
+    dummy_return;            !- Zone Return Air Node or NodeList Name
 
 
 !-   ===========  ALL OBJECTS IN CLASS: OUTPUT:VARIABLEDICTIONARY ===========
@@ -1113,6 +1167,16 @@ Output:Variable,
 Output:Variable,
     *,                       !- Key Value
     Zone Air Relative Humidity,  !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    ideal_cooling,           !- Key Value
+    Zone Ideal Loads Zone Total Cooling Rate,  !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    dummy_cooling,           !- Key Value
+    Zone Ideal Loads Zone Total Cooling Rate,  !- Variable Name
     Hourly;                  !- Reporting Frequency
 
 

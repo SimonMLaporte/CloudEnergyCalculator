@@ -51,7 +51,7 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     OTTV, RTTV = calculate_OTTV(inputJSON)
 
     # Extract energy use
-    annual_cooling_demand = round(sum(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
+    annual_cooling_demand = round(sum(get_csv_data(result_file,"IDEAL_COOLING:Zone Ideal Loads Zone Total Cooling Rate [W](Hourly)"))/1000/gfa,2)
     annual_cooling_electricity = round(annual_cooling_demand/COP,2)
     annual_lighting_electricity = round(sum(get_csv_data(result_file,"main_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     annual_equipment_electricity = round(sum(get_csv_data(result_file,"main_equipment:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
@@ -65,10 +65,10 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     max_electricity_demand = round(max(get_csv_data(result_file,"Electricity:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
     
     #get the 98th percentile chiller load
-    all_cooling_demands = get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)")
+    all_cooling_demands = get_csv_data(result_file,"IDEAL_COOLING:Zone Ideal Loads Zone Total Cooling Rate [W](Hourly)")
     #remove zero cooling hours
     only_cooling_demands = [i for i in all_cooling_demands if i != 0]
-    max_cooling_demands = round(quantiles(only_cooling_demands, n=100)[98]*2.78*math.pow(10,-7),2)
+    max_cooling_demands = round(quantiles(only_cooling_demands, n=100)[98]/1000,2)
     
     #Extract EUI
     gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
@@ -152,9 +152,9 @@ def calculate_OTTV(input):
                 "North-West": 315,
                 }
     direction1 = rotation_mapping_clockwise[input["facade1_orientation"]]
-    direction2 = direction1 + 90
-    direction3 = direction2 + 90
-    direction4 = direction3 + 90
+    direction2 = (direction1 + 90) % 360
+    direction3 = (direction2 + 90) % 360
+    direction4 = (direction3 + 90) % 360
     area1 = input['facade1_width']*input['height']
     area2 = input['facade2_width']*input['height']
     area3 = area1

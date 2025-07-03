@@ -42,7 +42,7 @@ def transport_calc(assumption,build_area,total_pax,input):
         
         return annual_transport_emissions_ref, annual_transport_emissions 
     else:
-        return 'not valid for building type'
+        return 0,0 # transportation carbon not valid for building types
     
 
 def embodied_calc(building_type,assumptions,build_area,input):
