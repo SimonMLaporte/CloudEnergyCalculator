@@ -1,14 +1,14 @@
 {
-  "building_type": "healthcare_major",
+  "building_type": "office",
   "facade1_orientation": "North",
-  "facade1_width": 1,
-  "facade2_width": 1,
-  "height": 1,
-  "gfa": 100000,
+  "facade1_width": 45,
+  "facade2_width": 45,
+  "height": 100,
+  "gfa": 50625,
   "carpark_area_above_ground": 2000,
   "carpark_area_below_ground": 0,
   "landscape_area": 0,
-  "NV_percent": 0.99,
+  "NV_percent": 0.1,
   "LPD": 6,
   "sDA": 0,
   "COP": 4,
@@ -68,7 +68,9 @@
   "roof_glass_u": 3,
   "roof_glass_sc": 0.5,
 
-  "renewable_energy": 0,
+  "pv_area": 1000,
+  "pv_area_shading": "not_shaded",
+
 
   "structural_system": "reinforced_concrete",
   "concrete_usage": 50000,

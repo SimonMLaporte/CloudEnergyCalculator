@@ -69,7 +69,8 @@
   "roof_glass_u": "W/m2/k",
   "roof_glass_sc": "0 to 1 ratio",
 
-  "renewable_energy": "MWh/year of produced energy",
+  "pv_area": "m2",
+  "pv_area_shading": "string: very_shaded, slightly_shaded, not_shaded",
 
   "structural_system": "string: reinforced_concrete, steel, low_strucutral_wood, high_structural_wood",
   "concrete_usage": "tons",

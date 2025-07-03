@@ -83,10 +83,10 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     max_electricity_demand = round(max(hour_by_hour_electricity,2))
     
     #get the 98th percentile chiller load
-    all_cooling_demands = get_csv_data(result_file,"IDEAL_COOLING:Zone Ideal Loads Zone Total Cooling Rate [W](Hourly)") #in W
+    all_cooling_demands = get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)") #in J
     #remove zero cooling hours
     only_cooling_demands = [i for i in all_cooling_demands if i != 0]
-    max_cooling_demands = round(quantiles(only_cooling_demands, n=100)[98]/1000,2) # in kW
+    max_cooling_demands = round(quantiles(only_cooling_demands, n=100)[98]*2.78*math.pow(10,-7),2) # get the 98th percentile active cooling load in kW 
     
     #Extract EUI
     gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
@@ -132,6 +132,7 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
         "threshold_embodied": threshold_embodied,
         "threshold_transport": threshold_transport,
         "threshold_carbon_footprint": round(threshold_operation + threshold_embodied + threshold_transport,2),
+        "renewable_production": round(calculate_pv_yield(inputJSON["pv_area"],inputJSON["pv_area_shading"]),2),
         "ottv": round(OTTV,2),
         "rttv": round(RTTV,2)  
     }
@@ -249,6 +250,20 @@ def OTTV_shading_coefficient(glass_sc,overhang_depth,window_height,window_width,
     sc2_r2 = get_row_by_value_and_ranges(SC2_r2_values, R2, orientation, column_ranges)
     sc2 = min(sc2_r1,sc2_r2)
     return sc1 * sc2
+
+
+def calculate_pv_yield(area, shading):
+    kWp_per_area = 0.21
+    kWp = area * kWp_per_area
+    shading_dict = {
+        "not_shaded": 1,
+        "slightly_shaded": 0.7,
+        "very_shaded": 0.5
+        }
+    shading_factor = shading_dict[shading]
+    pv_yield = 1200 * kWp * shading_factor
+    
+    return pv_yield 
 
 def get_row_by_value_and_ranges(arr_2d, value, row_index, ranges):
     """

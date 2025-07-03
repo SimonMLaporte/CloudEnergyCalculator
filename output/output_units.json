@@ -26,6 +26,8 @@
   "EUI_average": "kWh/m2/year",
   "EUI_threshold": "kWh/m2/year",
 
+  "renewable_production": "MWh/year",
+
   "ASSUMPTION_hours":"weekly operational hours",
   "ASSUMPTION_equipment":"w/m2 internal equipment load",
   "ASSUMPTION_lift":"w/m2 internal lift load",
