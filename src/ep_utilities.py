@@ -51,24 +51,42 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     OTTV, RTTV = calculate_OTTV(inputJSON)
 
     # Extract energy use
-    annual_cooling_demand = round(sum(get_csv_data(result_file,"IDEAL_COOLING:Zone Ideal Loads Zone Total Cooling Rate [W](Hourly)"))/1000/gfa,2)
-    annual_cooling_electricity = round(annual_cooling_demand/COP,2)
-    annual_lighting_electricity = round(sum(get_csv_data(result_file,"main_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
-    annual_equipment_electricity = round(sum(get_csv_data(result_file,"main_equipment:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
-    annual_lift_electricity = round(sum(get_csv_data(result_file,"lifts:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
-    annual_carpark_electricity = round(sum(get_csv_data(result_file,"carpark_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2) + round(sum(get_csv_data(result_file,"carpark_ventilation:InteriorEquipment:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
-    annual_outdoor_lighting_electricity = round(sum(get_csv_data(result_file,"facade_landscape_lighting:InteriorLights:Electricity [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
+    annual_cooling_demand = round(sum(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
+    
+    cooling_electricity = get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)")
+    max_cooling_electricity = max([item *2.78*math.pow(10,-7)/gfa/COP for item in cooling_electricity])
+    annual_cooling_electricity = round(sum(cooling_electricity)*2.78*math.pow(10,-7)/gfa/COP,2)
+    
+    lighting_electricity = get_csv_data(result_file,"main_lighting:InteriorLights:Electricity [J](Hourly)")
+    max_lighting_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in lighting_electricity])
+    annual_lighting_electricity = round(sum(lighting_electricity)*2.78*math.pow(10,-7)/gfa,2)
+    
+    equipment_electricity = get_csv_data(result_file,"main_equipment:InteriorEquipment:Electricity [J](Hourly)")
+    max_equipment_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in equipment_electricity])
+    annual_equipment_electricity = round(sum(equipment_electricity)*2.78*math.pow(10,-7)/gfa,2)
+    
+    lift_electricity = get_csv_data(result_file,"lifts:InteriorEquipment:Electricity [J](Hourly)")
+    max_lift_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in equipment_electricity])
+    annual_lift_electricity = round(sum(lift_electricity)*2.78*math.pow(10,-7)/gfa,2)
+    
+    carpark_electricity = get_csv_data(result_file,"carpark_lighting:InteriorLights:Electricity [J](Hourly)")+get_csv_data(result_file,"carpark_ventilation:InteriorEquipment:Electricity [J](Hourly)")
+    max_carpark_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in carpark_electricity])
+    annual_carpark_electricity = round(sum(carpark_electricity)*2.78*math.pow(10,-7)/gfa,2)
+    
+    outdoor_lighting_electricity = get_csv_data(result_file,"facade_landscape_lighting:InteriorLights:Electricity [J](Hourly)")
+    max_outdoor_lighting_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in outdoor_lighting_electricity])
+    annual_outdoor_lighting_electricity = round(sum(outdoor_lighting_electricity)*2.78*math.pow(10,-7)/gfa,2)
     annual_total_electricity = round(annual_cooling_electricity + annual_equipment_electricity +annual_lighting_electricity+ annual_lift_electricity + annual_carpark_electricity + annual_outdoor_lighting_electricity,2)
     
     
-    
-    max_electricity_demand = round(max(get_csv_data(result_file,"Electricity:Facility [J](Hourly)"))*2.78*math.pow(10,-7),2)
+    hour_by_hour_electricity = max_cooling_electricity + max_lighting_electricity + max_equipment_electricity + max_lift_electricity + max_carpark_electricity + max_outdoor_lighting_electricity
+    max_electricity_demand = round(max(hour_by_hour_electricity,2))
     
     #get the 98th percentile chiller load
-    all_cooling_demands = get_csv_data(result_file,"IDEAL_COOLING:Zone Ideal Loads Zone Total Cooling Rate [W](Hourly)")
+    all_cooling_demands = get_csv_data(result_file,"IDEAL_COOLING:Zone Ideal Loads Zone Total Cooling Rate [W](Hourly)") #in W
     #remove zero cooling hours
     only_cooling_demands = [i for i in all_cooling_demands if i != 0]
-    max_cooling_demands = round(quantiles(only_cooling_demands, n=100)[98]/1000,2)
+    max_cooling_demands = round(quantiles(only_cooling_demands, n=100)[98]/1000,2) # in kW
     
     #Extract EUI
     gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
