@@ -1,6 +1,8 @@
 from geomeppy import IDF
+from ottv_calculations import calculate_wall_orientation, generate_coordinate_list
 import pandas as pd
 import os
+import math
 
 
 
@@ -18,16 +20,27 @@ def generate_idf(inputJson):
     
     #Extract values from JSON
     schedule = schedules[inputJson['building_type']]
-    width = inputJson["facade1_width"]
-    length = inputJson["facade2_width"]
     height =inputJson["height"]
-    facade_area = width *height *2 + length * height *2
     gfa = inputJson['gfa']
-    n_WWR = inputJson["1_WWR"]
-    e_WWR = inputJson["2_WWR"]
-    s_WWR = inputJson["3_WWR"]
-    w_WWR = inputJson["4_WWR"]
     NV = inputJson['NV_percent']
+    
+    #generate main geometry
+    coordinates = generate_coordinate_list(inputJson['walls'])
+    facade_area = calculate_facade_area(inputJson['walls'],height)
+    idf.add_block('MAIN',coordinates,height)
+    idf.intersect_match()
+    rotation = calculate_wall_orientation(inputJson['walls'],inputJson['facade1_orientation'])[0]
+    idf.rotate(rotation) #rotates in degrees CCW from north/Y-axis
+
+    idf.set_default_constructions()
+    surfaces = idf.getsurfaces()
+    surface_names = []
+    for s in surfaces:
+        surface_names.append(s.Name)
+    # remove dummy names form list, the floor and the roof
+    wall_names = surface_names[6:-2]
+    #Get roof as the last item on the list
+    roof_name = surface_names[-1]
     
     
     
@@ -82,20 +95,15 @@ def generate_idf(inputJson):
     #Set Schedules
     set_schedules(idf,schedule)
 
-    # Set building size
-    heightScale = height * (1-NV) 
-    set_building_dimensions(idf,length,width,heightScale,inputJson["facade1_orientation"])
-
     # Add windows and shading
-    n_name = add_window('wall_n',n_WWR,idf)
-    add_shade(idf, n_name, inputJson["1_window_width"],inputJson["1_window_height"],inputJson["1_overhang_depth"],inputJson["1_sidefin_depth"], inputJson["1_fin-to-fin_distance"],inputJson["1_z_offset"])
-    s_name = add_window('wall_s',s_WWR,idf)
-    add_shade(idf, s_name, inputJson["3_window_width"],inputJson["3_window_height"],inputJson["3_overhang_depth"],inputJson["3_sidefin_depth"], inputJson["3_fin-to-fin_distance"],inputJson["3_z_offset"])
-    w_name = add_window('wall_w',w_WWR,idf)
-    add_shade(idf, w_name, inputJson["4_window_width"],inputJson["4_window_height"],inputJson["4_overhang_depth"],inputJson["4_sidefin_depth"], inputJson["4_fin-to-fin_distance"],inputJson["4_z_offset"])
-    e_name = add_window('wall_e',e_WWR,idf)
-    add_shade(idf, e_name, inputJson["2_window_width"],inputJson["2_window_height"],inputJson["2_overhang_depth"],inputJson["2_sidefin_depth"], inputJson["2_fin-to-fin_distance"],inputJson["2_z_offset"])
-    roof_name = add_window('roof',inputJson['roof_WWR'],idf)
+    window_id = []
+    counter = 0
+    for wall in inputJson['walls']:
+        window = add_window(wall_names[counter], wall['WWR'],idf)
+        window_id.append(window)
+        add_shade(idf, window,wall['window_width'],wall['window_height'],wall['overhang_depth'],wall['sidefin_depth'],wall['fin_to_fin_distance'],wall['z_offset'])
+        counter += 1
+    roof_window = add_window(roof_name, inputJson['roof']['roof_WWR'],idf)
     
     
     # Set lighting
@@ -121,16 +129,16 @@ def generate_idf(inputJson):
     idf.newidfobject("INTERNALMASS",
                 Name = 'internalmass',
                 Construction_Name = 'AllSurfaces',
-                Zone_or_ZoneList_Name = 'main',
+                Zone_or_ZoneList_Name = 'Block MAIN Storey 0',
                 Surface_Area = gfa*(1-NV)
                 )
     
     #Set constructions
-    set_construction(idf, 'wall_n',n_name,inputJson['1_wall_u'],inputJson['1_albedo'],inputJson['1_glass_sc'],inputJson["1_glass_u"])
-    set_construction(idf, 'wall_e',e_name,inputJson['2_wall_u'],inputJson['2_albedo'],inputJson['2_glass_sc'],inputJson["2_glass_u"])
-    set_construction(idf, 'wall_s',s_name,inputJson['3_wall_u'],inputJson['3_albedo'],inputJson['3_glass_sc'],inputJson["3_glass_u"])
-    set_construction(idf, 'wall_w',w_name,inputJson['4_wall_u'],inputJson['4_albedo'],inputJson['4_glass_sc'],inputJson["4_glass_u"])
-    set_construction(idf, 'roof',roof_name,inputJson['roof_u'],inputJson['roof_albedo'],inputJson['roof_glass_sc'],inputJson["roof_glass_u"])
+    counter = 0
+    for wall in inputJson['walls']:
+        set_construction(idf, wall_names[counter], window_id[counter],wall['wall_u'],wall['absorptivity'],wall['glass_sc'],wall['glass_u'])
+        counter += 1
+    set_construction(idf, roof_name, roof_window,inputJson['roof']['roof_u'],inputJson['roof']['roof_absorptivity'],inputJson['roof']['roof_glass_sc'],inputJson['roof']['roof_glass_u'])
     
     #Save idf
     idf.saveas(outpath)
@@ -158,7 +166,7 @@ def add_window(wallID,WWR,idf):
             )
     return wallID + "_window"
 
-def set_construction(idf, wallID,windowID, Uvalue, albedo, glassSC, glassU):
+def set_construction(idf, wallID,windowID, Uvalue, absorb, glassSC, glassU):
     
     #Add window constrction
     idf.newidfobject(
@@ -184,13 +192,11 @@ def set_construction(idf, wallID,windowID, Uvalue, albedo, glassSC, glassU):
             s.Construction_Name = wallID + '_window_construction'
 
     #Add wall construction
-    
-    #Add dummy material with correct solar absorbtance
+    #Add dummy material with solar absorbtance
     r_value = 1 / Uvalue 
 
     # 2. Calculate Solar Absorptance from Albedo
-    solar_absorptance = 1.0 - albedo
-
+    solar_absorptance = absorb
     # 3. Create a unique Material:NoMass name
     construction_name = wallID + '_wall_material'
 
@@ -248,7 +254,6 @@ def set_building_dimensions(idf,length,width,height,orientation):
     return 0
 
 def add_shade(idf, window_name,window_width, window_height,overhang_depth, sidefin_depth,fin_to_fin, z_offset):
-        
         idf.newidfobject(
         'SHADING:OVERHANG:PROJECTION',
         Name=window_name +'overhang',
@@ -258,16 +263,34 @@ def add_shade(idf, window_name,window_width, window_height,overhang_depth, sidef
         Height_above_Window_or_Door = z_offset,
         )
         
-        idf.newidfobject(
+        
+        if fin_to_fin > window_width:
+            left_offset = fin_to_fin - window_width/2
+            right_offset = fin_to_fin - window_width/2
+            
+            idf.newidfobject(
             'SHADING:FIN:PROJECTION',
             Name=window_name +'fin',
             Window_or_Door_Name=window_name,
+            Left_Extension_from_WindowDoor = left_offset,
+            Right_Extension_from_WindowDoor = right_offset,
             Left_Tilt_Angle_from_WindowDoor = 90,
             Right_Tilt_Angle_from_WindowDoor = 90,
             Left_Depth_as_Fraction_of_WindowDoor_Width = sidefin_depth/window_width,
             Right_Depth_as_Fraction_of_WindowDoor_Width = sidefin_depth/window_width,
                 
         )
+        else: 
+            idf.newidfobject(
+            'SHADING:FIN:PROJECTION',
+            Name=window_name +'fin',
+            Window_or_Door_Name=window_name,
+            Left_Tilt_Angle_from_WindowDoor = 90,
+            Right_Tilt_Angle_from_WindowDoor = 90,
+            Left_Depth_as_Fraction_of_WindowDoor_Width = sidefin_depth/fin_to_fin,
+            Right_Depth_as_Fraction_of_WindowDoor_Width = sidefin_depth/fin_to_fin,
+                
+        )   
 
 def calculate_area(coords):
     x = [coord[0] for coord in coords]
@@ -339,4 +362,17 @@ def set_schedules(idf, schedule):
     
     
     return 0
+
+
+
+def calculate_facade_area(walls,height):
+    area = 0
+    for wall in walls:
+        x1 = wall['x1']
+        x2 = wall['x2']
+        y1 = wall['y1']
+        y2 = wall['y2']
+        distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+        area += distance * height
     
+    return area

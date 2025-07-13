@@ -571,21 +571,6 @@ GlobalGeometryRules,
 !-   ===========  ALL OBJECTS IN CLASS: ZONE ===========
 
 Zone,
-    main,                    !- Name
-    0,                       !- Direction of Relative North {deg}
-    0,                       !- X Origin {m}
-    0,                       !- Y Origin {m}
-    0,                       !- Z Origin {m}
-    1,                       !- Type
-    1,                       !- Multiplier
-    autocalculate,           !- Ceiling Height {m}
-    autocalculate,           !- Volume {m3}
-    autocalculate,           !- Floor Area {m2}
-    ,                        !- Zone Inside Convection Algorithm
-    ,                        !- Zone Outside Convection Algorithm
-    Yes;                     !- Part of Total Floor Area
-
-Zone,
     dummyBlock,              !- Name
     0,                       !- Direction of Relative North {deg}
     0,                       !- X Origin {m}
@@ -602,156 +587,6 @@ Zone,
 
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDINGSURFACE:DETAILED ===========
-
-BuildingSurface:Detailed,
-    Floor,                   !- Name
-    Floor,                   !- Surface Type
-    AllSurfaces,             !- Construction Name
-    main,                    !- Zone Name
-    ,                        !- Space Name
-    Ground,                  !- Outside Boundary Condition
-    ,                        !- Outside Boundary Condition Object
-    NoSun,                   !- Sun Exposure
-    NoWind,                  !- Wind Exposure
-    autocalculate,           !- View Factor to Ground
-    autocalculate,           !- Number of Vertices
-    0,                       !- Vertex 1 X-coordinate {m}
-    0,                       !- Vertex 1 Y-coordinate {m}
-    0,                       !- Vertex 1 Z-coordinate {m}
-    0,                       !- Vertex 2 X-coordinate {m}
-    10,                      !- Vertex 2 Y-coordinate {m}
-    0,                       !- Vertex 2 Z-coordinate {m}
-    10,                      !- Vertex 3 X-coordinate {m}
-    10,                      !- Vertex 3 Y-coordinate {m}
-    0,                       !- Vertex 3 Z-coordinate {m}
-    10,                      !- Vertex 4 X-coordinate {m}
-    0,                       !- Vertex 4 Y-coordinate {m}
-    0;                       !- Vertex 4 Z-coordinate {m}
-
-BuildingSurface:Detailed,
-    wall_s,                  !- Name
-    Wall,                    !- Surface Type
-    AllSurfaces,             !- Construction Name
-    main,                    !- Zone Name
-    ,                        !- Space Name
-    Outdoors,                !- Outside Boundary Condition
-    ,                        !- Outside Boundary Condition Object
-    SunExposed,              !- Sun Exposure
-    WindExposed,             !- Wind Exposure
-    autocalculate,           !- View Factor to Ground
-    autocalculate,           !- Number of Vertices
-    0,                       !- Vertex 1 X-coordinate {m}
-    0,                       !- Vertex 1 Y-coordinate {m}
-    10,                      !- Vertex 1 Z-coordinate {m}
-    0,                       !- Vertex 2 X-coordinate {m}
-    0,                       !- Vertex 2 Y-coordinate {m}
-    0,                       !- Vertex 2 Z-coordinate {m}
-    10,                      !- Vertex 3 X-coordinate {m}
-    0,                       !- Vertex 3 Y-coordinate {m}
-    0,                       !- Vertex 3 Z-coordinate {m}
-    10,                      !- Vertex 4 X-coordinate {m}
-    0,                       !- Vertex 4 Y-coordinate {m}
-    10;                      !- Vertex 4 Z-coordinate {m}
-
-BuildingSurface:Detailed,
-    wall_e,                  !- Name
-    Wall,                    !- Surface Type
-    AllSurfaces,             !- Construction Name
-    main,                    !- Zone Name
-    ,                        !- Space Name
-    Outdoors,                !- Outside Boundary Condition
-    ,                        !- Outside Boundary Condition Object
-    SunExposed,              !- Sun Exposure
-    WindExposed,             !- Wind Exposure
-    autocalculate,           !- View Factor to Ground
-    autocalculate,           !- Number of Vertices
-    10,                      !- Vertex 1 X-coordinate {m}
-    0,                       !- Vertex 1 Y-coordinate {m}
-    10,                      !- Vertex 1 Z-coordinate {m}
-    10,                      !- Vertex 2 X-coordinate {m}
-    0,                       !- Vertex 2 Y-coordinate {m}
-    0,                       !- Vertex 2 Z-coordinate {m}
-    10,                      !- Vertex 3 X-coordinate {m}
-    10,                      !- Vertex 3 Y-coordinate {m}
-    0,                       !- Vertex 3 Z-coordinate {m}
-    10,                      !- Vertex 4 X-coordinate {m}
-    10,                      !- Vertex 4 Y-coordinate {m}
-    10;                      !- Vertex 4 Z-coordinate {m}
-
-BuildingSurface:Detailed,
-    wall_n,                  !- Name
-    Wall,                    !- Surface Type
-    AllSurfaces,             !- Construction Name
-    main,                    !- Zone Name
-    ,                        !- Space Name
-    Outdoors,                !- Outside Boundary Condition
-    ,                        !- Outside Boundary Condition Object
-    SunExposed,              !- Sun Exposure
-    WindExposed,             !- Wind Exposure
-    autocalculate,           !- View Factor to Ground
-    autocalculate,           !- Number of Vertices
-    10,                      !- Vertex 1 X-coordinate {m}
-    10,                      !- Vertex 1 Y-coordinate {m}
-    10,                      !- Vertex 1 Z-coordinate {m}
-    10,                      !- Vertex 2 X-coordinate {m}
-    10,                      !- Vertex 2 Y-coordinate {m}
-    0,                       !- Vertex 2 Z-coordinate {m}
-    0,                       !- Vertex 3 X-coordinate {m}
-    10,                      !- Vertex 3 Y-coordinate {m}
-    0,                       !- Vertex 3 Z-coordinate {m}
-    0,                       !- Vertex 4 X-coordinate {m}
-    10,                      !- Vertex 4 Y-coordinate {m}
-    10;                      !- Vertex 4 Z-coordinate {m}
-
-BuildingSurface:Detailed,
-    wall_w,                  !- Name
-    Wall,                    !- Surface Type
-    AllSurfaces,             !- Construction Name
-    main,                    !- Zone Name
-    ,                        !- Space Name
-    Outdoors,                !- Outside Boundary Condition
-    ,                        !- Outside Boundary Condition Object
-    SunExposed,              !- Sun Exposure
-    WindExposed,             !- Wind Exposure
-    autocalculate,           !- View Factor to Ground
-    autocalculate,           !- Number of Vertices
-    0,                       !- Vertex 1 X-coordinate {m}
-    10,                      !- Vertex 1 Y-coordinate {m}
-    10,                      !- Vertex 1 Z-coordinate {m}
-    0,                       !- Vertex 2 X-coordinate {m}
-    10,                      !- Vertex 2 Y-coordinate {m}
-    0,                       !- Vertex 2 Z-coordinate {m}
-    0,                       !- Vertex 3 X-coordinate {m}
-    0,                       !- Vertex 3 Y-coordinate {m}
-    0,                       !- Vertex 3 Z-coordinate {m}
-    0,                       !- Vertex 4 X-coordinate {m}
-    0,                       !- Vertex 4 Y-coordinate {m}
-    10;                      !- Vertex 4 Z-coordinate {m}
-
-BuildingSurface:Detailed,
-    roof,                    !- Name
-    Roof,                    !- Surface Type
-    AllSurfaces,             !- Construction Name
-    main,                    !- Zone Name
-    ,                        !- Space Name
-    Outdoors,                !- Outside Boundary Condition
-    ,                        !- Outside Boundary Condition Object
-    SunExposed,              !- Sun Exposure
-    WindExposed,             !- Wind Exposure
-    autocalculate,           !- View Factor to Ground
-    autocalculate,           !- Number of Vertices
-    0,                       !- Vertex 1 X-coordinate {m}
-    0,                       !- Vertex 1 Y-coordinate {m}
-    10,                      !- Vertex 1 Z-coordinate {m}
-    10,                      !- Vertex 2 X-coordinate {m}
-    0,                       !- Vertex 2 Y-coordinate {m}
-    10,                      !- Vertex 2 Z-coordinate {m}
-    10,                      !- Vertex 3 X-coordinate {m}
-    10,                      !- Vertex 3 Y-coordinate {m}
-    10,                      !- Vertex 3 Z-coordinate {m}
-    0,                       !- Vertex 4 X-coordinate {m}
-    10,                      !- Vertex 4 Y-coordinate {m}
-    10;                      !- Vertex 4 Z-coordinate {m}
 
 BuildingSurface:Detailed,
     dummy_floor,             !- Name
@@ -908,7 +743,7 @@ BuildingSurface:Detailed,
 
 People,
     people,                  !- Name
-    main,                    !- Zone or ZoneList or Space or SpaceList Name
+    Block MAIN Storey 0,     !- Zone or ZoneList or Space or SpaceList Name
     office,                  !- Number of People Schedule Name
     People,                  !- Number of People Calculation Method
     1,                       !- Number of People
@@ -942,7 +777,7 @@ People,
 
 Lights,
     lights,                  !- Name
-    main,                    !- Zone or ZoneList or Space or SpaceList Name
+    Block MAIN Storey 0,     !- Zone or ZoneList or Space or SpaceList Name
     office,                  !- Schedule Name
     LightingLevel,           !- Design Level Calculation Method
     1000,                    !- Lighting Level {W}
@@ -960,7 +795,7 @@ Lights,
 
 ElectricEquipment,
     equipment,               !- Name
-    main,                    !- Zone or ZoneList or Space or SpaceList Name
+    Block MAIN Storey 0,     !- Zone or ZoneList or Space or SpaceList Name
     office,                  !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     10,                      !- Design Level {W}
@@ -976,7 +811,7 @@ ElectricEquipment,
 
 ZoneInfiltration:DesignFlowRate,
     infiltration,            !- Name
-    main,                    !- Zone or ZoneList or Space or SpaceList Name
+    Block MAIN Storey 0,     !- Zone or ZoneList or Space or SpaceList Name
     alwaysON,                !- Schedule Name
     AirChanges/Hour,         !- Design Flow Rate Calculation Method
     ,                        !- Design Flow Rate {m3/s}
@@ -1005,7 +840,7 @@ DesignSpecification:OutdoorAir,
 
 ZoneControl:Thermostat,
     24degC,                  !- Name
-    main,                    !- Zone or ZoneList Name
+    Block MAIN Storey 0,     !- Zone or ZoneList Name
     cooling_control,         !- Control Type Schedule Name
     ThermostatSetpoint:SingleCooling,  !- Control 1 Object Type
     cooling_setpoint;        !- Control 1 Name
@@ -1066,7 +901,7 @@ ZoneHVAC:EquipmentList,
 !-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:EQUIPMENTCONNECTIONS ===========
 
 ZoneHVAC:EquipmentConnections,
-    main,                    !- Zone Name
+    Block MAIN Storey 0,     !- Zone Name
     list,                    !- Zone Conditioning Equipment List Name
     zone_inlet,              !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
