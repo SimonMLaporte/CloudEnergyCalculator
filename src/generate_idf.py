@@ -1,5 +1,5 @@
 from geomeppy import IDF
-from ottv_calculations import calculate_wall_orientation, generate_coordinate_list
+from geometry import generate_coordinate_list, get_daylight_area_adjustment
 import pandas as pd
 import os
 import math
@@ -29,14 +29,16 @@ def generate_idf(inputJson):
     facade_area = calculate_facade_area(inputJson['walls'],height)
     idf.add_block('MAIN',coordinates,height)
     idf.intersect_match()
-    rotation = calculate_wall_orientation(inputJson['walls'],inputJson['facade1_orientation'])[0]
-    idf.rotate(rotation) #rotates in degrees CCW from north/Y-axis
+    idf.rotate(inputJson['rotation']) #rotates in degrees CCW from north/Y-axis
 
     idf.set_default_constructions()
     surfaces = idf.getsurfaces()
     surface_names = []
     for s in surfaces:
         surface_names.append(s.Name)
+    
+    #
+    daylight_adjustment = get_daylight_area_adjustment(coordinates, inputJson['daylight_distance'])
     # remove dummy names form list, the floor and the roof
     wall_names = surface_names[6:-2]
     #Get roof as the last item on the list
@@ -49,7 +51,7 @@ def generate_idf(inputJson):
                      Name = 'dummyLights',
                      Zone_or_ZoneList_or_Space_or_SpaceList_Name = 'dummyBlock',
                      Schedule_Name = schedule,
-                     Lighting_Level = NV * gfa * inputJson["LPD"] * (1-inputJson['sDA']),
+                     Lighting_Level = NV * gfa * inputJson["LPD"] * daylight_adjustment,
                      EndUse_Subcategory = "main_lighting"
                      )
     idf.newidfobject("LIGHTS",
@@ -81,7 +83,6 @@ def generate_idf(inputJson):
                      EndUse_Subcategory = "lifts"
                      )
     
-    
     idf.newidfobject("ELECTRICEQUIPMENT",
                      Name = 'carparkVentilation',
                      Zone_or_ZoneList_or_Space_or_SpaceList_Name = 'dummyBlock',
@@ -107,7 +108,7 @@ def generate_idf(inputJson):
     
     
     # Set lighting
-    newWatt = gfa*(1-NV) * (1-inputJson['sDA']) * inputJson["LPD"]
+    newWatt = gfa*(1-NV) * daylight_adjustment
     lights = idf.idfobjects["LIGHTS"]
     lights[0].Lighting_Level = newWatt
     
@@ -362,8 +363,6 @@ def set_schedules(idf, schedule):
     
     
     return 0
-
-
 
 def calculate_facade_area(walls,height):
     area = 0

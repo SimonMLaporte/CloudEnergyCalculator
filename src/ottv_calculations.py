@@ -1,11 +1,12 @@
 import math
+from geometry import generate_coordinate_list
 
 def calculate_OTTV(input):
     #formula from MS 1525:2014 clause 5.2.1
     walls = input['walls']
 
     #find the wall normal directions and map to nearest 45 degrees
-    actual_directions = calculate_wall_orientation(walls,input['facade1_orientation'])
+    actual_directions = calculate_wall_orientation(walls,input['rotation'])
     wall_nearest_direction = []
     for direction in actual_directions:
         wall_nearest_direction.append(quantize_direction(direction))
@@ -153,18 +154,18 @@ def calculate_wall_orientation(walls,rotation):
     points = generate_coordinate_list(walls)
     
     #Map orientation to rodation
-    rotation_dict = {
-        "North": 0,
-        "North-East": 45,
-        "East": 90,
-        "South-East": 135,
-        "South": 180,
-        "South-West": 225,
-        "West": 270,
-        "North-West": 315,
-    }
+    #rotation_dict = {
+    #    "North": 0,
+    #    "North-East": 45,
+    #    "East": 90,
+    #    "South-East": 135,
+    #    "South": 180,
+    #    "South-West": 225,
+    #    "West": 270,
+    #    "North-West": 315,
+    #}
     
-    orientation1 = rotation_dict[rotation]
+    #orientation1 = rotation_dict[rotation]
     
     # calculate direction vector
     direction_vectors = []
@@ -184,7 +185,6 @@ def calculate_wall_orientation(walls,rotation):
     # calculate the normal angle for each wall
     normal_angles = calculate_normal_and_angle(points, winding_order)
     
-    rotation = orientation1 - normal_angles[0]
     rotated_angles = [] 
     for angle in normal_angles:
         rotated_angles.append((angle + rotation) % 360)
@@ -235,7 +235,6 @@ def calculate_normal_and_angle(points, winding_order):
 
 def calculate_winding_order(direction_vectors):
     #Determine if a polygon is clockwise or counter clockwise based on the signed area (if the area is positive or negative)
-    
     n = len(direction_vectors)
     signed_area =0
     for i in range(n):
@@ -250,14 +249,5 @@ def calculate_winding_order(direction_vectors):
     else:
         return 'DEGENERATE'
 
-def generate_coordinate_list(walls):
-    coordinates = []
-    #first wall add both points
-    coordinates.append((walls[0]['x1'],walls[0]['y1']))
-    
-    for wall in walls:
-       coordinates.append((wall['x2'],wall['y2']))
-   
-    coordinates = coordinates[:-1]
-    return coordinates
+
 

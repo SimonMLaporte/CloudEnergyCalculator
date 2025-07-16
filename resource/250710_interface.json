@@ -1,6 +1,6 @@
 {
   "building_type": "office",
-  "facade1_orientation": "South",
+  "rotation": 0,
   "height": 90,
   "footprint": 1600,
   "gfa": 48000,
@@ -9,7 +9,7 @@
   "landscape_area": 100,
   "NV_percent": 0.15,
   "LPD": 6,
-  "sDA": 0.3,
+  "daylight_distance": 4,
   "COP": 4,
 
   
