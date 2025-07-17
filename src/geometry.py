@@ -39,8 +39,12 @@ def save_plot(coords, new_coords, filename,daylight_adjustment):
     # Plot the new, inset shape(s)
     if len(new_coords)>2:
         inset_x, inset_y = zip(*list(new_coords))
-        ax.fill(inset_x, inset_y, color='black', alpha=1, label='Dark area')
-    plt.text(5,4,daylight_text,color = 'grey')
+        ax.fill(inset_x, inset_y, color='grey', alpha=1, label='Dark area')
+    plt.text(0.5,0.5,daylight_text,color = 'black'
+             ,horizontalalignment='center', 
+        verticalalignment='center',
+        fontsize = 24,
+        transform=ax.transAxes)
     
     # Set the plot to have no axes, gridlines, and a tight layout
     ax.set_axis_off()
