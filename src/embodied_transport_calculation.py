@@ -10,8 +10,9 @@ def transport_calc(assumption,build_area,total_pax,input):
         bus = assumption['Bus']
         rail = assumption['Rail']
         walk = assumption['Walk/Cycle']
-        
-        annual_commute_days = 200    
+        EV = assumption['EV']
+        E_motorcycle = assumption['E_Motorcycle']
+        annual_commute_days = 220    
         #one way emissions
         annual_transport_emissions_ref = total_pax *annual_commute_days*(car['Fraction'] * car['GHG Emissions']*car['Distance']+
                                                                      motor['Fraction'] * motor['GHG Emissions']*motor['Distance']+
@@ -25,16 +26,26 @@ def transport_calc(assumption,build_area,total_pax,input):
             "Distance": input['commute_distance_by_car'],
             "GHG Emissions": car['GHG Emissions']
             }
+        e_car = {
+            "Fraction": input['commute_by_ev'],
+            "Distance": input['commute_distance_by_car'],
+            "GHG Emissions": EV['GHG Emissions']
+            }
         motor = {
             "Fraction": input['commute_by_motor_bike'],
             "Distance": input['commute_distance_by_motor_bike'],
             "GHG Emissions": motor['GHG Emissions']
             }
+        e_motor = {
+            "Fraction": input['commute_by_e_motor_bike'],
+            "Distance": input['commute_distance_by_motor_bike'],
+            "GHG Emissions": E_motorcycle['GHG Emissions']
+            }
+        
         rail = {
             "Fraction": input['commute_by_rail'],
             "Distance": input['commute_distance_by_rail'],
             "GHG Emissions": rail['GHG Emissions']
-            
         }
         bus = {
             "Fraction": input['commute_by_bus'],
@@ -47,11 +58,14 @@ def transport_calc(assumption,build_area,total_pax,input):
             "GHG Emissions": bus['GHG Emissions']
             
         }
+        #One way emissions
         annual_transport_emissions = total_pax *annual_commute_days*(car['Fraction'] * car['GHG Emissions']*car['Distance']+
                                                                 motor['Fraction'] * motor['GHG Emissions']*motor['Distance']+
                                                                 rail['Fraction'] * rail['GHG Emissions']*rail['Distance']+
                                                                 taxi['Fraction'] * taxi['GHG Emissions']*taxi['Distance']+
-                                                                bus['Fraction'] * bus['GHG Emissions']*bus['Distance']
+                                                                bus['Fraction'] * bus['GHG Emissions']*bus['Distance']+
+                                                                e_car['Fraction'] * e_car['GHG Emissions'] * e_car['Distance']+
+                                                                e_motor['Fraction'] * e_motor['GHG Emissions'] * e_motor['Distance']
                                                                 )/build_area/2
         
         

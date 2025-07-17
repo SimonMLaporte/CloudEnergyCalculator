@@ -118,7 +118,9 @@
   "timber_usage": 0,
 
   "commute_by_car": 0.70,
+  "commute_by_ev":0,
   "commute_by_motor_bike": 0.30,
+  "commute_by_e_motor_bike": 0,
   "commute_by_rail": 0,
   "commute_by_bus": 0,
   "commute_by_walk_cycle": 0.00,
@@ -129,4 +131,5 @@
   "commute_distance_by_bus": 0,
   "commute_distance_by_walk_cycle": 0.00,
   "commute_distance_by_taxi": 0
+  
 }
