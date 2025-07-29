@@ -235,29 +235,6 @@ def add_roof_window(wallID,WWR,idf, coordinates,z):
         current_x_local += (side_length + skylight_spacing)
         
     return skylight_names
-        
-
-        
-            
-    #check is exceeding roof width, go to next line if exceeding
-        
-        
-    # Calculate the centroid
-
-    
-    #Draw skylight as a square in the middle of the roof
-    if WWR>0:
-        idf.newidfobject(
-            'WINDOW',
-            Name=wallID + "_window",
-            Construction_Name='window',
-            Building_Surface_Name=wallID,
-            Starting_X_Coordinate=centroid_x-side_length/2,
-            Starting_Z_Coordinate=centroid_y-side_length/2,
-            Length=side_length,
-            Height=side_length
-            )
-    return wallID + "_window"
 
 def add_window(wallID,WWR,idf):
     #extract wall

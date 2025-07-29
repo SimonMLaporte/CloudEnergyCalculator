@@ -1,6 +1,7 @@
 from shapely.geometry import Polygon, Point
 import matplotlib.pyplot as plt
 import os
+import math
 from paths import OUTPUT_PATH
 
 def get_daylight_area_adjustment(coordinates, inset_distance):
@@ -121,8 +122,24 @@ def generate_coordinate_list(walls):
     for wall in walls:
        coordinates.append((wall['x2'],wall['y2']))
    
+
+    
+    #Find the index of the point with the lowest distance to (0,0)
     coordinates = coordinates[:-1]
-    return coordinates
+    min_distance = float('inf')
+    closest_point_index = -1
+    for i, point in enumerate(coordinates):
+        x, y = point
+        distance = math.sqrt(x**2 + y**2)
+        if distance < min_distance:
+            min_distance = distance
+            closest_point_index = i
+    
+    adjusted_coordinates = []
+    n = len(coordinates)
+    for i in range(len(coordinates)):
+        adjusted_coordinates.append(coordinates[(closest_point_index +i) %n])
+    return adjusted_coordinates
 
 
 #debug shape 
