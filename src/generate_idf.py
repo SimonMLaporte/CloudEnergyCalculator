@@ -1,5 +1,7 @@
 from geomeppy import IDF
-from geometry import generate_coordinate_list, get_daylight_area_adjustment
+from geometry import generate_coordinate_list, get_daylight_area_adjustment, calculate_area, isInside
+from shapely.geometry import Polygon
+import math
 import pandas as pd
 import os
 import math
@@ -104,7 +106,7 @@ def generate_idf(inputJson):
         window_id.append(window)
         add_shade(idf, window,wall['window_width'],wall['window_height'],wall['overhang_depth'],wall['sidefin_depth'],wall['fin_to_fin_distance'],wall['z_offset'])
         counter += 1
-    roof_window = add_window(roof_name, inputJson['roof']['roof_WWR'],idf)
+    roof_windows = add_roof_window(roof_name, inputJson['roof']['roof_WWR'],idf, coordinates,height)
     
     
     # Set lighting
@@ -137,13 +139,125 @@ def generate_idf(inputJson):
     #Set constructions
     counter = 0
     for wall in inputJson['walls']:
-        set_construction(idf, wall_names[counter], window_id[counter],wall['wall_u'],wall['absorptivity'],wall['glass_sc'],wall['glass_u'])
+        set_construction(idf, wall_names[counter], window_id[counter],wall['wall_u'],wall['absorptivity'],wall['glass_sc'],wall['glass_u'],True)
         counter += 1
-    set_construction(idf, roof_name, roof_window,inputJson['roof']['roof_u'],inputJson['roof']['roof_absorptivity'],inputJson['roof']['roof_glass_sc'],inputJson['roof']['roof_glass_u'])
-    
+    counter = 0
+    for skylight_name in roof_windows:
+        if counter == 0: #ensure wall construction is only being added once
+            set_construction(idf, roof_name, skylight_name,inputJson['roof']['roof_u'],inputJson['roof']['roof_absorptivity'],inputJson['roof']['roof_glass_sc'],inputJson['roof']['roof_glass_u'],True)
+        else:
+            set_construction(idf, roof_name, skylight_name,inputJson['roof']['roof_u'],inputJson['roof']['roof_absorptivity'],inputJson['roof']['roof_glass_sc'],inputJson['roof']['roof_glass_u'],False)
+        counter += 1
     #Save idf
     idf.saveas(outpath)
     return assumptions
+
+def add_roof_window(wallID,WWR,idf, coordinates,z):
+
+    #Special case as there is a risk of window going outside the roof 
+    window_ratio = 0
+    if WWR == 1:
+        window_ratio = 0.99
+    else:
+        window_ratio = WWR
+    
+    #extract roof
+    surfaces = idf.idfobjects["BUILDINGSURFACE:DETAILED"]
+    selected = ''
+    for s in surfaces:
+        if s.Name == wallID:
+            selected = s
+    
+    
+    #script breaks down the total window size into a range of smaller windows
+    roof_area = calculate_area(coordinates)
+    target_area = roof_area * window_ratio
+    window_area = max(1,roof_area/50) #ensure that there is no more than 50 windows
+    side_length = math.sqrt(window_area)
+    number_skylights = int(round(target_area/window_area))
+    
+    
+    placed_skylight_count = 0
+    skylight_spacing = 0.2
+    current_x_local =skylight_spacing
+    current_y_local = skylight_spacing
+    
+    origin_x = coordinates[0][0]
+    origin_y = coordinates[0][1]
+    skylight_names = []
+    #try to fit each skylight
+    for i in range(number_skylights):
+
+        global_upper_right = [origin_x + current_x_local + side_length,origin_y + current_y_local+side_length]
+        global_lower_right = [origin_x + current_x_local + side_length,origin_y + current_y_local]
+        
+        #check if window is outside of roof if outside go to next line
+        if isInside(global_upper_right[0],global_upper_right[1],coordinates)==0 or isInside(global_lower_right[0],global_lower_right[1],coordinates)==0:
+            current_x_local = skylight_spacing
+            current_y_local += side_length + current_y_local
+        
+        global_upper_right = [origin_x + current_x_local + side_length,origin_y + current_y_local+side_length,z]
+        global_lower_right = [origin_x + current_x_local + side_length,origin_y + current_y_local,z]
+        global_upper_left = [origin_x + current_x_local,origin_y + current_y_local + side_length,z]
+        global_lower_left = [origin_x + current_x_local,origin_y + current_y_local,z]
+        
+        
+        skylight_fields = {
+           'Name': f'Skylight_{i+1}',
+            'Surface_Type': 'Window',
+            'Construction_Name': "window",
+            'Building_Surface_Name': wallID,
+            'Number_of_Vertices': 4 # Always 4 for a rectangle
+        }
+         # Assign the 4 global vertex coordinates directly
+        skylight_fields['Vertex_1_Xcoordinate'] = global_upper_right[0]
+        skylight_fields['Vertex_1_Ycoordinate'] = global_upper_right[1]
+        skylight_fields['Vertex_1_Zcoordinate'] = global_upper_right[2]
+
+        skylight_fields['Vertex_2_Xcoordinate'] = global_upper_left[0]
+        skylight_fields['Vertex_2_Ycoordinate'] = global_upper_left[1]
+        skylight_fields['Vertex_2_Zcoordinate'] = global_upper_left[2]
+
+        skylight_fields['Vertex_3_Xcoordinate'] = global_lower_left[0]
+        skylight_fields['Vertex_3_Ycoordinate'] = global_lower_left[1]
+        skylight_fields['Vertex_3_Zcoordinate'] = global_lower_left[2]
+
+        skylight_fields['Vertex_4_Xcoordinate'] = global_lower_right[0]
+        skylight_fields['Vertex_4_Ycoordinate'] = global_lower_right[1]
+        skylight_fields['Vertex_4_Zcoordinate'] = global_lower_right[2]
+            # Create the FenestrationSurface:Detailed object
+        idf.newidfobject(
+            'FENESTRATIONSURFACE:DETAILED',
+            **skylight_fields
+        )
+        
+        skylight_names.append(f'Skylight_{i+1}')
+        current_x_local += (side_length + skylight_spacing)
+        
+    return skylight_names
+        
+
+        
+            
+    #check is exceeding roof width, go to next line if exceeding
+        
+        
+    # Calculate the centroid
+
+    
+    #Draw skylight as a square in the middle of the roof
+    if WWR>0:
+        idf.newidfobject(
+            'WINDOW',
+            Name=wallID + "_window",
+            Construction_Name='window',
+            Building_Surface_Name=wallID,
+            Starting_X_Coordinate=centroid_x-side_length/2,
+            Starting_Z_Coordinate=centroid_y-side_length/2,
+            Length=side_length,
+            Height=side_length
+            )
+    return wallID + "_window"
 
 def add_window(wallID,WWR,idf):
     #extract wall
@@ -154,33 +268,35 @@ def add_window(wallID,WWR,idf):
             selected = s
     windowheight=selected.height*WWR
 
+    #ensure window is fully surrounded
     if WWR>0:
         idf.newidfobject(
             'WINDOW',
             Name=wallID + "_window",
             Construction_Name='window',
             Building_Surface_Name=wallID,
-            Starting_X_Coordinate=0,
-            Starting_Z_Coordinate=0,
-            Length=selected.width,
-            Height=windowheight
+            Starting_X_Coordinate=0.01,
+            Starting_Z_Coordinate=0.01,
+            Length=selected.width - 0.02,
+            Height=windowheight - 0.02
             )
     return wallID + "_window"
 
-def set_construction(idf, wallID,windowID, Uvalue, absorb, glassSC, glassU):
+def set_construction(idf, wallID,windowID, Uvalue, absorb, glassSC, glassU, add_wall_construction):
     
     #Add window constrction
+   
     idf.newidfobject(
         'WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM',
-        Name = wallID + '_window_construction',
+        Name = windowID + '_window_construction',
         UFactor = glassU,
         Solar_Heat_Gain_Coefficient = glassSC,
     )
     
     idf.newidfobject(
         'CONSTRUCTION',
-        Name=wallID + '_window_construction',
-        Outside_Layer=wallID + '_window_construction'
+        Name=windowID + '_window_construction',
+        Outside_Layer=windowID + '_window_construction'
         )
     
     
@@ -190,43 +306,43 @@ def set_construction(idf, wallID,windowID, Uvalue, absorb, glassSC, glassU):
     selected = ''
     for s in surfaces:
         if s.Name == windowID:
-            s.Construction_Name = wallID + '_window_construction'
+            s.Construction_Name = windowID + '_window_construction'
+    if add_wall_construction:
+        #Add wall construction
+        #Add dummy material with solar absorbtance
+        r_value = 1 / Uvalue 
 
-    #Add wall construction
-    #Add dummy material with solar absorbtance
-    r_value = 1 / Uvalue 
+        # 2. Calculate Solar Absorptance from Albedo
+        solar_absorptance = absorb
+        # 3. Create a unique Material:NoMass name
+        construction_name = wallID + '_wall_material'
 
-    # 2. Calculate Solar Absorptance from Albedo
-    solar_absorptance = absorb
-    # 3. Create a unique Material:NoMass name
-    construction_name = wallID + '_wall_material'
-
-   
-    # 4. Create the Material:NoMass object
-    idf.newidfobject(
-        'MATERIAL:NOMASS',
-        Name=construction_name,
-        Roughness='Smooth', # You can adjust roughness as needed
-        Thermal_Resistance=r_value, # This sets the U-value
-        Solar_Absorptance=solar_absorptance, # This sets the albedo
-        Visible_Absorptance=solar_absorptance, # Often set to same as solar absorptance for simplicity
-        Thermal_Absorptance=0.9 # Typical value for exterior surfaces
-        )
     
-    # 5. Create a simple Construction using this Material:NoMass
-    idf.newidfobject(
-        'CONSTRUCTION',
-        Name=construction_name,
-        Outside_Layer=construction_name
-        )
-    
-    #Set wall construction
-    surfaces = idf.idfobjects["BUILDINGSURFACE:DETAILED"]
-    selected = ''
-    for s in surfaces:
-        if s.Name == wallID:
-            s.Construction_Name = construction_name
-    
+        # 4. Create the Material:NoMass object
+        idf.newidfobject(
+            'MATERIAL:NOMASS',
+            Name=construction_name,
+            Roughness='Smooth', # You can adjust roughness as needed
+            Thermal_Resistance=r_value, # This sets the U-value
+            Solar_Absorptance=solar_absorptance, # This sets the albedo
+            Visible_Absorptance=solar_absorptance, # Often set to same as solar absorptance for simplicity
+            Thermal_Absorptance=0.9 # Typical value for exterior surfaces
+            )
+        
+        # 5. Create a simple Construction using this Material:NoMass
+        idf.newidfobject(
+            'CONSTRUCTION',
+            Name=construction_name,
+            Outside_Layer=construction_name
+            )
+        
+        #Set wall construction
+        surfaces = idf.idfobjects["BUILDINGSURFACE:DETAILED"]
+        selected = ''
+        for s in surfaces:
+            if s.Name == wallID:
+                s.Construction_Name = construction_name
+        
     return 0
     
 def set_building_dimensions(idf,length,width,height,orientation):

@@ -1,4 +1,4 @@
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, Point
 import matplotlib.pyplot as plt
 import os
 from paths import OUTPUT_PATH
@@ -40,7 +40,7 @@ def save_plot(coords, new_coords, filename,daylight_adjustment,multiblock):
 
     # Plot the original shape
     orig_x, orig_y = zip(*coords)
-    ax.fill(orig_x, orig_y, color='springgreen', alpha=0.5, label='Daylit area')
+    ax.fill(orig_x, orig_y, color='dodgerblue', alpha=0.5, label='Daylit area')
 
     # Plot the new, inset shape(s)
     if multiblock == False:
@@ -94,6 +94,24 @@ def calculate_area(coordinates):
         p2 = direction_vectors[(i+1)%n] #wrap around
         signed_area += p1[0]*p2[1] - p1[1]*p2[0]
     return abs(signed_area)
+
+def isInside(px,py,polygon_points):
+    point = Point(px, py)
+    polygon = Polygon(polygon_points)
+   
+    if polygon.contains(point):
+        return True
+    elif polygon.boundary.contains(point) or polygon.touches(point):
+        # .boundary.contains(point) checks if the point is on the exterior or interior rings.
+        # .touches(point) specifically checks if the point is on the boundary
+        # without being inside. It's often redundant if .boundary.contains is used for
+        # simple cases, but can be helpful for more complex boundary definitions or if
+        # you want to be explicit about touching. For points, .boundary.contains is
+        # usually sufficient for boundary checks.
+        return 0
+    else:
+        return 0
+    
 
 def generate_coordinate_list(walls):
     coordinates = []

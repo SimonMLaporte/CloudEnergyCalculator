@@ -6,4 +6,4 @@ hotel_4star,8,0.1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,139,1,168,210,290,0.78
 healthcare_limited,8,0.1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,21,1,168,200,250,0.78
 healthcare_major,8,0.1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,21,1,168,285,350,0.78
 residential,8,0.1,2.2,0.43,0,1.6,1,0.3,2.5,1.6,1000,23,1,14,42,55,0.78
-Source,Internal,,ASHRAE 90.1 - 2016 Section 9 as building facade zone 4,ASHRAE 90.1 - 2016 Section 9 as landscaping zone 4,,ASHRAE 90.1 - 2016 Section 9 .5.1 as parking garage,,ASHRAE 62.1 - 2016,ASHRAE 62.1 - 2016,,,https://www.usgbc.org/credits/new-construction-existing-buildings-commercial-interiors-core-and-shell-schools-new-constr-3,,Internal,Internal,Internal,Internal
+Source,Internal,Internal,ASHRAE 90.1 - 2016 Section 9 as building facade zone 4,ASHRAE 90.1 - 2016 Section 9 as landscaping zone 4,,ASHRAE 90.1 - 2016 Section 9 .5.1 as parking garage,,ASHRAE 62.1 - 2016,ASHRAE 62.1 - 2016,,DOSH ICOP 2010,https://www.usgbc.org/credits/new-construction-existing-buildings-commercial-interiors-core-and-shell-schools-new-constr-3,,Internal,Internal,Internal,Internal
