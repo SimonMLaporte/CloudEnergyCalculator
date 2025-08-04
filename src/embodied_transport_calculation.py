@@ -28,7 +28,7 @@ def transport_calc(assumption,build_area,total_pax,input):
             }
         e_car = {
             "Fraction": input['commute_by_ev'],
-            "Distance": input['commute_distance_by_car'],
+            "Distance": input['commute_distance_by_ev'],
             "GHG Emissions": EV['GHG Emissions']
             }
         motor = {
@@ -38,7 +38,7 @@ def transport_calc(assumption,build_area,total_pax,input):
             }
         e_motor = {
             "Fraction": input['commute_by_e_motor_bike'],
-            "Distance": input['commute_distance_by_motor_bike'],
+            "Distance": input['commute_distance_by_e_motor_bike'],
             "GHG Emissions": E_motorcycle['GHG Emissions']
             }
         
