@@ -27,11 +27,13 @@ def generate_idf(inputJson):
     NV = inputJson['NV_percent']
     
     #generate main geometry
-    coordinates = generate_coordinate_list(inputJson['walls'])
+    coordinates = generate_coordinate_list(inputJson['walls'],True)
     facade_area = calculate_facade_area(inputJson['walls'],height)
     idf.add_block('MAIN',coordinates,height)
     idf.intersect_match()
-    idf.rotate(inputJson['rotation']) #rotates in degrees CCW from north/Y-axis
+    building = idf.idfobjects['BUILDING'][0]
+    building.North_Axis = 360 - inputJson['rotation']
+    #rotates in degrees CW from north/Y-axis
 
     idf.set_default_constructions()
     surfaces = idf.getsurfaces()
@@ -108,7 +110,7 @@ def generate_idf(inputJson):
         counter += 1
     roof_windows = add_roof_window(roof_name, inputJson['roof']['roof_WWR'],idf, coordinates,height)
     
-    
+ 
     # Set lighting
     newWatt = gfa*(1-NV) * daylight_adjustment
     lights = idf.idfobjects["LIGHTS"]

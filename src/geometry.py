@@ -114,7 +114,7 @@ def isInside(px,py,polygon_points):
         return 0
     
 
-def generate_coordinate_list(walls):
+def generate_coordinate_list(walls,ordered):
     coordinates = []
     #first wall add both points
     coordinates.append((walls[0]['x1'],walls[0]['y1']))
@@ -123,23 +123,25 @@ def generate_coordinate_list(walls):
        coordinates.append((wall['x2'],wall['y2']))
    
 
-    
-    #Find the index of the point with the lowest distance to (0,0)
-    coordinates = coordinates[:-1]
-    min_distance = float('inf')
-    closest_point_index = -1
-    for i, point in enumerate(coordinates):
-        x, y = point
-        distance = math.sqrt(x**2 + y**2)
-        if distance < min_distance:
-            min_distance = distance
-            closest_point_index = i
-    
-    adjusted_coordinates = []
-    n = len(coordinates)
-    for i in range(len(coordinates)):
-        adjusted_coordinates.append(coordinates[(closest_point_index +i) %n])
-    return adjusted_coordinates
+    if ordered:
+        #Find the index of the point with the lowest distance to (0,0)
+        coordinates = coordinates[:-1]
+        min_distance = float('inf')
+        closest_point_index = -1
+        for i, point in enumerate(coordinates):
+            x, y = point
+            distance = math.sqrt(x**2 + y**2)
+            if distance < min_distance:
+                min_distance = distance
+                closest_point_index = i
+        
+        adjusted_coordinates = []
+        n = len(coordinates)
+        for i in range(len(coordinates)):
+            adjusted_coordinates.append(coordinates[(closest_point_index +i) %n])
+        return adjusted_coordinates
+    else:
+        return coordinates
 
 
 #debug shape 

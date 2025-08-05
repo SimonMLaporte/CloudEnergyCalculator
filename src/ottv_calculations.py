@@ -151,8 +151,8 @@ def get_row_by_value_and_ranges(arr_2d, value, row_index, ranges):
         return 1
     
 def calculate_wall_orientation(walls,rotation):
-    points = generate_coordinate_list(walls)
-    
+    points = generate_coordinate_list(walls,False)
+    points.pop()
     #Map orientation to rodation
     #rotation_dict = {
     #    "North": 0,
@@ -187,7 +187,7 @@ def calculate_wall_orientation(walls,rotation):
     
     rotated_angles = [] 
     for angle in normal_angles:
-        rotated_angles.append((angle + rotation) % 360)
+        rotated_angles.append((angle - rotation) % 360)
     
     return rotated_angles
 

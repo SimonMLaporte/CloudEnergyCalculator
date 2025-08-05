@@ -563,7 +563,7 @@ Construction,
 GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     Counterclockwise,        !- Vertex Entry Direction
-    World,                   !- Coordinate System
+    Relative,                !- Coordinate System
     Relative,                !- Daylighting Reference Point Coordinate System
     Relative;                !- Rectangular Surface Coordinate System
 

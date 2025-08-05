@@ -1,6 +1,6 @@
 {
   "building_type": "office",
-  "rotation": 0,
+  "rotation": 270,
   "height": 90,
   "footprint": 1600,
   "gfa": 48000,
