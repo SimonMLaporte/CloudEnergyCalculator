@@ -211,7 +211,7 @@ def calculate_normal_and_angle(points, winding_order):
             normal_y = -vx
         if winding_order == 'CW':
             normal_x = -vy
-            normal_sy = vx
+            normal_y = vx
         
         #normalize vectors
         norm_magnitude = math.sqrt(normal_x**2 + normal_y**2)
