@@ -108,15 +108,14 @@
     "roof_glass_sc": 0.8,
     "roof_absorptivity": 0.7
   },
-    
 
   "renewable_energy": 100,
   "structural_system": "reinforced_concrete",
-  "concrete_usage": 187000,
-  "steel_usage": 0,
+  "wall_system":"brick_wall",
+  "roof_system":"metal_deck_roof",
+  "glazing_system":"sgu",
   "green_concrete_percent": 0,
   "green_steel_percent": 0,
-  "timber_usage": 0,
 
   "commute_by_car": 0.70,
   "commute_by_ev":0,

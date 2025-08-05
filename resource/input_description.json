@@ -71,9 +71,11 @@
 
   "renewable_energy": "MWh/year of produced energy",
 
-  "structural_system": "string: reinforced_concrete, steel, low_strucutral_wood, high_structural_wood",
-  "concrete_usage": "tons",
-  "steel_usage": "tons",
+  "structural_system": "string: reinforced_concrete, structural_steel, timber_conventional, timber_manufactured,structural_masonry,precast_concrete, other_structural_system",
+  "wall_system":"string: brick_wall, glass_curtain_wall, aluminium_wall, composite_wall, other_wall",
+  "roof_system":"string: reinforced_concrete_roof, metal_deck_roof, cement_tile_roof, other_roof",
+  "glazing_system":"string: sgu, sgu_low_e,laminated, dgu, other_glazing",
+  
   "green_concrete_percent": "0 to 1 ratio low carbon concrete used",
   "green_steel_percent": "0 to 1 ratio low carbon steel used",
 

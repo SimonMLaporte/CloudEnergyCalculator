@@ -1,4 +1,4 @@
-from generate_idf import load_assumptions
+from generate_idf import load_assumptions, calculate_glazing_area
 
 def transport_calc(assumption,build_area,total_pax,input):
  
@@ -75,39 +75,42 @@ def transport_calc(assumption,build_area,total_pax,input):
         return 0,0 # transportation carbon not valid for building types
     
 
-def embodied_calc(building_type,assumptions,build_area,input):
-    # kgCo2e/ton
-    rc = float(assumptions['Emission factor']['Concrete + rebar']) * 1000
-    green_rc = float(assumptions['Emission factor']['Green concrete + rebar'])  * 1000
-    steel = float(assumptions['Emission factor']['Steel'])  * 1000
-    green_steel = float(assumptions['Emission factor']['Green steel'])  * 1000
-    glu_lam = float(assumptions['Emission factor']['Glu-lam'])  * 1000
-    
-   
-    
-    # building life-span in years
-    building_lifespan = 50
-    
-    build_area = input['gfa'] + input['carpark_area_above_ground'] + input['carpark_area_above_ground']
-     #Quantities ton/m2
-    ref_steel = float(assumptions[building_type]['Steel'])/1000
-    ref_rc = float(assumptions[building_type]['Concrete + rebar'])/1000
-    ref_glu_lam = float(assumptions[building_type]['Glu-lam'])/1000
-    
-    #reference emissions
-    reference_steel = ref_steel * steel
-    reference_rc = ref_rc * rc
-    reference_glu_lam = ref_glu_lam * glu_lam
+def embodied_calc(building_type,assumptions,input):
+    # kgCo2e/m2
+    structural_system = float(assumptions[building_type][input['structural_system']]) # multiplied by GFA
+    wall_system = float(assumptions[building_type][input['wall_system']]) # multipplied by GFA
+    roof_system = float(assumptions[building_type][input['roof_system']]) # multiplied by roof area
+    glazing_system = float(assumptions[building_type][input['glazing_system']]) # multiplied by glazing area
+    carpark_above_ground = float(assumptions['carpark_above_ground'][input['structural_system']]) # multiplied by carpark area
+    carpark_below_ground = float(assumptions['carpark_below_ground'][input['structural_system']]) # multiplied by carpark area
+    height_adjusetment_factor = float(assumptions['height_adjustment']['height_adjustment'])
+    height_adjustment = (input['height']-50)*height_adjusetment_factor/100 # percent change based on ratio counting from 50m
+    benchmark = float(assumptions[building_type]['threshold'])
     
     
-    # Submissions
-    steel_emissions = steel * input['steel_usage'] * (1-input['green_steel_percent'])+ green_steel* input['green_steel_percent'] * input['steel_usage']
-    concrete_emissions = rc * input['concrete_usage'] * (1-input['green_concrete_percent']) + green_rc * input['green_concrete_percent'] * input['concrete_usage']
-    timber_emissions = glu_lam * input['timber_usage']
-
-    reference_emissions = (reference_steel + reference_rc + reference_glu_lam) / building_lifespan
-    total_annual_emissions =  ((steel_emissions + concrete_emissions + timber_emissions)/build_area) / building_lifespan
-    return  reference_emissions, total_annual_emissions#reference_embodied,
+    # building life-span in years based on structural system
+    building_lifespan = float(assumptions['building_lifespan'][input['structural_system']])
+    
+    #Areas
+    gfa = input['gfa'] 
+    carpark_above_ground_area = input['carpark_area_above_ground']
+    carpark_below_ground_area = input['carpark_area_below_ground']
+    glazing = calculate_glazing_area(input['walls'],input['height'])
+    roof = input['footprint']
+    built_area = gfa + carpark_above_ground_area + carpark_below_ground_area
+    
+    emissions = (
+    (structural_system * gfa 
+    + wall_system * gfa 
+    + roof_system * roof 
+    + glazing_system * glazing 
+    + carpark_below_ground_area * carpark_below_ground 
+    + carpark_above_ground_area * carpark_above_ground) 
+    * (1+height_adjustment) / building_lifespan) /built_area
+    threshold_emissions = benchmark * (1+height_adjustment) / building_lifespan
+    average_emissions = threshold_emissions/1.25 # assumed 25% lower
+    
+    return  threshold_emissions, average_emissions, emissions #reference_embodied,
 
     
     
@@ -116,17 +119,17 @@ def embodied_transport_emissions(input):
     assumptions = load_assumptions(input['building_type'])
     transport_assumptions = load_assumptions(input['building_type'],'transport')
     embodied_assumptions = load_assumptions(input['building_type'],'embodied')
-    total_pax =   input['gfa'] /assumptions['People density (m2/pax AC area)']
-    embodied_carbon_reference, embodied_carbon = embodied_calc(input['building_type'],embodied_assumptions, build_area,input)
+    total_pax = input['gfa'] /assumptions['People density (m2/pax AC area)']
+    embodied_carbon_reference, average_carbon,embodied_carbon = embodied_calc(input['building_type'],embodied_assumptions,input)
     transport_carbon_reference, transport_carbon = transport_calc(transport_assumptions,build_area,total_pax,input)
     
     
     other_carbon = {
         "embodied_carbon_reference": embodied_carbon_reference,
+        "embodied_carbon_average": average_carbon,
         "embodied_carbon_submission": embodied_carbon,
         "transport_carbon_reference": transport_carbon_reference,
         "transport_carbon_submission": transport_carbon,
     }
     
     return other_carbon
-

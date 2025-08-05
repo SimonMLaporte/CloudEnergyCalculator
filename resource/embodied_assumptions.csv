@@ -1,8 +1,26 @@
-﻿data,Emission factor,office,retail_hyper,retail_center,hotel_4star,healthcare_limited,healthcare_major,residential
-unit,kgCO2e/kg,kg/m2,kg/m2,kg/m2,kg/m2,kg/m2,kg/m2,kg/m2
-Concrete + rebar,0.25,720,720,720,720,720,720,720
-Green concrete + rebar,0.22,0,0,0,0,0,0,0
-Steel,2.94,0,0,0,0,0,0,0
-Green steel,1.12,0,0,0,0,0,0,0
-Glu-lam,-0.72,0,0,0,0,0,0,0
-source,Singapore BCA calculator,Intenal,Intenal,Intenal,Intenal,Intenal,Intenal,Intenal
+﻿data,office,retail_hyper,retail_center,hotel_4star,healthcare_limited,healthcare_major,residential,carpark_above_ground,carpark_below_ground,,height_adjustment,building_lifespan
+unit,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,,"percent increase per m above 64m, percent decrease per m below 50m",
+reinforced_concrete,500,444,444,357,407,407,400,462,640,gfa,,50
+reinforced_concrete_green,500,444,444,357,407,407,400,462,640,gfa,,50
+precast_concrete,500,444,444,357,407,407,400,462,640,gfa,,50
+structural_steel,335,297,297,239,273,273,268,462,640,gfa,,50
+timber_conventional,265,235,235,189,216,216,212,462,640,gfa,,50
+timber_manufactured,265,235,235,189,216,216,212,462,640,gfa,,50
+structural_masonry,500,444,444,357,407,407,400,462,640,gfa,,50
+other_structural_system,0,0,0,0,0,0,0,0,0,gfa,,
+brick_wall,0,0,0,0,0,0,0,0,0,gfa,,
+glass_curtain_wall,0,0,0,0,0,0,0,0,0,gfa,,
+aluminium_wall,0,0,0,0,0,0,0,0,0,gfa,,
+composite_wall,0,0,0,0,0,0,0,0,0,gfa,,
+other_wall,0,0,0,0,0,0,0,0,0,gfa,,
+reinforced_concrete_roof,0,0,0,0,0,0,0,0,0,roof_area,,
+metal_deck_roof,0,0,0,0,0,0,0,0,0,roof_area,,
+cement_tile_roof,0,0,0,0,0,0,0,0,0,roof_area,,
+other_roof,0,0,0,0,0,0,0,0,0,roof_area,,
+sgu,0,0,0,0,0,0,0,0,0,glazing_area,,
+sgu_low_e,0,0,0,0,0,0,0,0,0,glazing_area,,
+laminated,0,0,0,0,0,0,0,0,0,glazing_area,,
+dgu,0,0,0,0,0,0,0,0,0,glazing_area,,
+other_glazing,0,0,0,0,0,0,0,0,0,glazing_area,,
+height_adjustment,,,,,,,,,,,0,
+threshold,600,600,600,550,650,650,550,,,gfa + carpark,,

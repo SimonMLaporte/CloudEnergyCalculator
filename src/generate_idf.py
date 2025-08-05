@@ -470,3 +470,14 @@ def calculate_facade_area(walls,height):
         area += distance * height
     
     return area
+
+def calculate_glazing_area(walls,height):
+    area = 0
+    for wall in walls:
+        x1 = wall['x1']
+        x2 = wall['x2']
+        y1 = wall['y1']
+        y2 = wall['y2']
+        distance = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+        area += distance * height*wall['WWR']
+    return area

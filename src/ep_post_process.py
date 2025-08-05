@@ -72,7 +72,7 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     submission_embodied = round(other_carbon['embodied_carbon_submission'],2)
     submission_transport = round(other_carbon['transport_carbon_submission'],2)
     average_operation =round(EUI_average * gridFactor,2)
-    average_embodied = round(other_carbon['embodied_carbon_reference'],2)
+    average_embodied = round(other_carbon['embodied_carbon_average'],2)
     average_transport = round(other_carbon['transport_carbon_reference'],2)
     threshold_operation = round(EUI_threshold * gridFactor)
     threshold_embodied = round(other_carbon['embodied_carbon_reference'],2)
