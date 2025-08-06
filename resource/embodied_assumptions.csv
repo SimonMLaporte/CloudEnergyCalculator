@@ -3,7 +3,8 @@ unit,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgC
 reinforced_concrete,500,444,444,357,407,407,400,462,640,gfa,,50
 reinforced_concrete_green,500,444,444,357,407,407,400,462,640,gfa,,50
 precast_concrete,500,444,444,357,407,407,400,462,640,gfa,,50
-structural_steel,335,297,297,239,273,273,268,462,640,gfa,,50
+structural_steel,410,372,372,314,348,348,343,462,640,gfa,,50
+structural_steel_green,410,372,372,314,348,348,343,462,640,gfa,,50
 timber_conventional,265,235,235,189,216,216,212,462,640,gfa,,50
 timber_manufactured,265,235,235,189,216,216,212,462,640,gfa,,50
 structural_masonry,500,444,444,357,407,407,400,462,640,gfa,,50

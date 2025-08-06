@@ -87,6 +87,17 @@ def embodied_calc(building_type,assumptions,input):
     height_adjustment = (input['height']-50)*height_adjusetment_factor/100 # percent change based on ratio counting from 50m
     benchmark = float(assumptions[building_type]['threshold'])
     
+    if input['structural_system'] == 'reinforced_concrete':
+        green_percent = input['green_concrete_percent']
+        green_value = float(assumptions[building_type]['reinforced_concrete_green'])
+        structural_system = green_percent * green_value + (1-green_percent)*structural_system
+        
+    elif input['structural_system'] == 'structural_steel':
+        green_percent = input['green_concrete_percent']
+        green_value = float(assumptions[building_type]['structural_steel_green'])
+        structural_system = green_percent * green_value + (1-green_percent)*structural_system
+        
+
     
     # building life-span in years based on structural system
     building_lifespan = float(assumptions['building_lifespan'][input['structural_system']])
