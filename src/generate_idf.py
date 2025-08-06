@@ -29,11 +29,22 @@ def generate_idf(inputJson):
     #generate main geometry
     coordinates = generate_coordinate_list(inputJson['walls'],True)
     facade_area = calculate_facade_area(inputJson['walls'],height)
+    
     idf.add_block('MAIN',coordinates,height)
     idf.intersect_match()
     building = idf.idfobjects['BUILDING'][0]
     building.North_Axis = 360 - inputJson['rotation']
     #rotates in degrees CW from north/Y-axis
+    
+    
+    # Get all roof surfaces
+    roof_surfaces = idf.getsurfaces('roof')
+
+    # Iterate through each roof surface and set exposure
+    for roof in roof_surfaces:
+        roof.Sun_Exposure = "SunExposed"
+        roof.Wind_Exposure = "WindExposed"
+    
 
     idf.set_default_constructions()
     surfaces = idf.getsurfaces()
@@ -108,7 +119,7 @@ def generate_idf(inputJson):
         window_id.append(window)
         add_shade(idf, window,wall['window_width'],wall['window_height'],wall['overhang_depth'],wall['sidefin_depth'],wall['fin_to_fin_distance'],wall['z_offset'])
         counter += 1
-    roof_windows = add_roof_window(roof_name, inputJson['roof']['roof_WWR'],idf, coordinates,height)
+    roof_windows = add_roof_window(roof_name, inputJson['roof']['roof_WWR'],idf, coordinates,height,inputJson['roof']['roof_glass_u'],inputJson['roof']['roof_glass_sc'])
     
  
     # Set lighting
@@ -154,14 +165,34 @@ def generate_idf(inputJson):
     idf.saveas(outpath)
     return assumptions
 
-def add_roof_window(wallID,WWR,idf, coordinates,z):
+def add_roof_window(wallID,WWR,idf, coordinates,z,U,SC):
+
+
+
+
 
     #Special case as there is a risk of window going outside the roof 
     window_ratio = 0
-    if WWR == 1:
-        window_ratio = 0.99
+    shading =0
+    if WWR > 0.3: # adjust SC value for very exposed windows
+        shading = min(WWR/0.3 * SC, 0.99)
+        window_ratio = 0.3
     else:
         window_ratio = WWR
+    
+        #Add construction
+    idf.newidfobject(
+        'WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM',
+        Name = 'skylight',
+        UFactor = U,
+        Solar_Heat_Gain_Coefficient = shading,
+    )
+    
+    idf.newidfobject(
+        'CONSTRUCTION',
+        Name='skylight',
+        Outside_Layer='skylight'
+        )
     
     #extract roof
     surfaces = idf.idfobjects["BUILDINGSURFACE:DETAILED"]
@@ -207,7 +238,7 @@ def add_roof_window(wallID,WWR,idf, coordinates,z):
         skylight_fields = {
            'Name': f'Skylight_{i+1}',
             'Surface_Type': 'Window',
-            'Construction_Name': "window",
+            'Construction_Name': "skylight",
             'Building_Surface_Name': wallID,
             'Number_of_Vertices': 4 # Always 4 for a rectangle
         }
@@ -264,7 +295,6 @@ def add_window(wallID,WWR,idf):
 def set_construction(idf, wallID,windowID, Uvalue, absorb, glassSC, glassU, add_wall_construction):
     
     #Add window constrction
-   
     idf.newidfobject(
         'WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM',
         Name = windowID + '_window_construction',
@@ -387,12 +417,6 @@ def add_shade(idf, window_name,window_width, window_height,overhang_depth, sidef
             Right_Depth_as_Fraction_of_WindowDoor_Width = sidefin_depth/fin_to_fin,
                 
         )   
-
-def calculate_area(coords):
-    x = [coord[0] for coord in coords]
-    y = [coord[1] for coord in coords]
-    area = 0.5 * abs(sum(x[i] * y[i - 1] - x[i - 1] * y[i] for i in range(len(x))))
-    return area
 
 def load_assumptions(building_type,assumption='base'):
     script_dir = os.path.dirname(__file__)

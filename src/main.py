@@ -10,7 +10,7 @@ import os
 script_dir = os.path.dirname(__file__)
 project_root = os.path.dirname(script_dir)
 json_file_dir= os.path.join(project_root, 'resource')
-debugJSON = os.path.join(json_file_dir, '250710_interface.json')
+debugJSON = os.path.join(json_file_dir, 'test.json')
 f = open(debugJSON)
 inputJSON = json.load(f)
 
