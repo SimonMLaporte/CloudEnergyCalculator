@@ -123,7 +123,7 @@ def generate_idf(inputJson):
     
  
     # Set lighting
-    newWatt = gfa*(1-NV) * daylight_adjustment
+    newWatt = gfa*(1-NV) * daylight_adjustment *inputJson['LPD']
     lights = idf.idfobjects["LIGHTS"]
     lights[0].Lighting_Level = newWatt
     
@@ -154,23 +154,14 @@ def generate_idf(inputJson):
     for wall in inputJson['walls']:
         set_construction(idf, wall_names[counter], window_id[counter],wall['wall_u'],wall['absorptivity'],wall['glass_sc'],wall['glass_u'],True)
         counter += 1
-    counter = 0
-    for skylight_name in roof_windows:
-        if counter == 0: #ensure wall construction is only being added once
-            set_construction(idf, roof_name, skylight_name,inputJson['roof']['roof_u'],inputJson['roof']['roof_absorptivity'],inputJson['roof']['roof_glass_sc'],inputJson['roof']['roof_glass_u'],True)
-        else:
-            set_construction(idf, roof_name, skylight_name,inputJson['roof']['roof_u'],inputJson['roof']['roof_absorptivity'],inputJson['roof']['roof_glass_sc'],inputJson['roof']['roof_glass_u'],False)
-        counter += 1
+
+    set_construction(idf, roof_name, None,inputJson['roof']['roof_u'],inputJson['roof']['roof_absorptivity'],inputJson['roof']['roof_glass_sc'],inputJson['roof']['roof_glass_u'],True)
+
     #Save idf
     idf.saveas(outpath)
     return assumptions
 
 def add_roof_window(wallID,WWR,idf, coordinates,z,U,SC):
-
-
-
-
-
     #Special case as there is a risk of window going outside the roof 
     window_ratio = 0
     shading =0
@@ -179,6 +170,7 @@ def add_roof_window(wallID,WWR,idf, coordinates,z,U,SC):
         window_ratio = 0.3
     else:
         window_ratio = WWR
+        shading = SC
     
         #Add construction
     idf.newidfobject(
@@ -294,28 +286,30 @@ def add_window(wallID,WWR,idf):
 
 def set_construction(idf, wallID,windowID, Uvalue, absorb, glassSC, glassU, add_wall_construction):
     
-    #Add window constrction
-    idf.newidfobject(
-        'WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM',
-        Name = windowID + '_window_construction',
-        UFactor = glassU,
-        Solar_Heat_Gain_Coefficient = glassSC,
-    )
-    
-    idf.newidfobject(
-        'CONSTRUCTION',
-        Name=windowID + '_window_construction',
-        Outside_Layer=windowID + '_window_construction'
+    if windowID != None:
+        #Add window constrction
+        idf.newidfobject(
+            'WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM',
+            Name = windowID + '_window_construction',
+            UFactor = glassU,
+            Solar_Heat_Gain_Coefficient = glassSC,
         )
+
+        idf.newidfobject(
+            'CONSTRUCTION',
+            Name=windowID + '_window_construction',
+            Outside_Layer=windowID + '_window_construction'
+            )
+
+
+
+        #Set window construction
+        surfaces = idf.idfobjects["WINDOW"]
+        selected = ''
+        for s in surfaces:
+            if s.Name == windowID:
+                s.Construction_Name = windowID + '_window_construction'
     
-    
-    
-    #Set window construction
-    surfaces = idf.idfobjects["WINDOW"]
-    selected = ''
-    for s in surfaces:
-        if s.Name == windowID:
-            s.Construction_Name = windowID + '_window_construction'
     if add_wall_construction:
         #Add wall construction
         #Add dummy material with solar absorbtance
@@ -380,6 +374,7 @@ def set_building_dimensions(idf,length,width,height,orientation):
     return 0
 
 def add_shade(idf, window_name,window_width, window_height,overhang_depth, sidefin_depth,fin_to_fin, z_offset):
+        overhang_depth = max(overhang_depth,0.05)
         idf.newidfobject(
         'SHADING:OVERHANG:PROJECTION',
         Name=window_name +'overhang',

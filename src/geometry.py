@@ -94,7 +94,7 @@ def calculate_area(coordinates):
         x1, y1 = coordinates[i]
         x2, y2 = coordinates[(i + 1) % n]   #wrap around
         signed_area += (x1 * y2) - (x2 * y1)
-    return abs(signed_area)
+    return abs(signed_area)/2
 
 def isInside(px,py,polygon_points):
     point = Point(px, py)
@@ -140,10 +140,5 @@ def generate_coordinate_list(walls,ordered):
         return coordinates
 
 
-#debug shape 
-coords = [
-    (0,0),(5,9),(10,0),(10,10),(0,10)
-]
-get_daylight_area_adjustment(coords, 1.5)
 
 

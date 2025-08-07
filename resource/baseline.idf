@@ -17,7 +17,7 @@ SimulationControl,
     No,                      !- Do Zone Sizing Calculation
     No,                      !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
-    Yes,                     !- Run Simulation for Sizing Periods
+    No,                      !- Run Simulation for Sizing Periods
     Yes,                     !- Run Simulation for Weather File Run Periods
     No,                      !- Do HVAC Sizing Simulation for Sizing Periods
     1;                       !- Maximum Number of HVAC Sizing Simulation Passes
@@ -163,7 +163,7 @@ Schedule:Day:Hourly,
     1,                       !- Hour 15
     1,                       !- Hour 16
     1,                       !- Hour 17
-    0,                       !- Hour 18
+    1,                       !- Hour 18
     0,                       !- Hour 19
     0,                       !- Hour 20
     0,                       !- Hour 21
@@ -522,7 +522,7 @@ Schedule:Compact,
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     Until: 24:00,            !- Field 3
-    70;                      !- Field 4
+     120;                    !- Field 4
 
 
 !-   ===========  ALL OBJECTS IN CLASS: MATERIAL ===========
@@ -750,7 +750,7 @@ People,
     ,                        !- People per Floor Area {person/m2}
     ,                        !- Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
-    autocalculate,           !- Sensible Heat Fraction
+    0.58,                    !- Sensible Heat Fraction
     activity_level,          !- Activity Level Schedule Name
     0.0000000382,            !- Carbon Dioxide Generation Rate {m3/s-W}
     No,                      !- Enable ASHRAE 55 Comfort Warnings
@@ -953,6 +953,16 @@ Output:Variable,
 Output:Variable,
     ideal_cooling,           !- Key Value
     Zone Ideal Loads Zone Total Cooling Rate,  !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    Zone People Latent Gain Rate,  !- Variable Name
+    Hourly;                  !- Reporting Frequency
+
+Output:Variable,
+    *,                       !- Key Value
+    People Sensible Heating Rate [W],  !- Variable Name
     Hourly;                  !- Reporting Frequency
 
 

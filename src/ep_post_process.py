@@ -26,34 +26,33 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     annual_cooling_demand = round(sum(get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)"))*2.78*math.pow(10,-7)/gfa,2)
     
     cooling_electricity = get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)")
-    max_cooling_electricity = max([item *2.78*math.pow(10,-7)/gfa/COP for item in cooling_electricity])
+    max_cooling_electricity = max([item *2.78*math.pow(10,-7)/COP for item in cooling_electricity])
     annual_cooling_electricity = round(sum(cooling_electricity)*2.78*math.pow(10,-7)/gfa/COP,2)
     
     lighting_electricity = get_csv_data(result_file,"main_lighting:InteriorLights:Electricity [J](Hourly)")
-    max_lighting_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in lighting_electricity])
+    max_lighting_electricity = max([item *2.78*math.pow(10,-7) for item in lighting_electricity])
     annual_lighting_electricity = round(sum(lighting_electricity)*2.78*math.pow(10,-7)/gfa,2)
     
     lift_electricity = get_csv_data(result_file,"lifts:InteriorEquipment:Electricity [J](Hourly)")
     
-    
     equipment_electricity = get_csv_data(result_file,"main_equipment:InteriorEquipment:Electricity [J](Hourly)") + lift_electricity
-    max_equipment_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in equipment_electricity])
+    max_equipment_electricity = max([item *2.78*math.pow(10,-7) for item in equipment_electricity])
     annual_equipment_electricity = round(sum(equipment_electricity)*2.78*math.pow(10,-7)/gfa,2)
     
     carpark_electricity = get_csv_data(result_file,"carpark_lighting:InteriorLights:Electricity [J](Hourly)")+get_csv_data(result_file,"carpark_ventilation:InteriorEquipment:Electricity [J](Hourly)")
-    max_carpark_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in carpark_electricity])
+    max_carpark_electricity = max([item *2.78*math.pow(10,-7) for item in carpark_electricity])
     annual_carpark_electricity = round(sum(carpark_electricity)*2.78*math.pow(10,-7)/gfa,2)
     
     misc_electricity = assumptions['Miscellaneous (kWh/m2/year)']
     
     outdoor_lighting_electricity = get_csv_data(result_file,"facade_landscape_lighting:InteriorLights:Electricity [J](Hourly)")
-    max_outdoor_lighting_electricity = max([item *2.78*math.pow(10,-7)/gfa for item in outdoor_lighting_electricity])
+    max_outdoor_lighting_electricity = max([item *2.78*math.pow(10,-7) for item in outdoor_lighting_electricity])
     annual_outdoor_lighting_electricity = round(sum(outdoor_lighting_electricity)*2.78*math.pow(10,-7)/gfa,2)
     annual_total_electricity = round(annual_cooling_electricity + annual_equipment_electricity +annual_lighting_electricity + annual_carpark_electricity + annual_outdoor_lighting_electricity,2)
     
     
     hour_by_hour_electricity = max_cooling_electricity + max_lighting_electricity + max_equipment_electricity + max_carpark_electricity + max_outdoor_lighting_electricity
-    max_electricity_demand = round(max(hour_by_hour_electricity,2))
+    max_electricity_demand = round(hour_by_hour_electricity,2)
     
     #get the 98th percentile chiller load
     all_cooling_demands = get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)") #in J
