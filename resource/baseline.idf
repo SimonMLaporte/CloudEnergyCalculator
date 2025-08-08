@@ -506,7 +506,7 @@ Schedule:Compact,
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     Until: 24:00,            !- Field 3
-    24;                      !- Field 4
+     22;                     !- Field 4
 
 Schedule:Compact,
     cooling_control,         !- Name
@@ -522,7 +522,7 @@ Schedule:Compact,
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     Until: 24:00,            !- Field 3
-     120;                    !- Field 4
+    120;                     !- Field 4
 
 
 !-   ===========  ALL OBJECTS IN CLASS: MATERIAL ===========
