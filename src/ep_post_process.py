@@ -60,6 +60,8 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     #remove zero cooling hours
     only_cooling_demands = [i for i in all_cooling_demands if i != 0]
     max_cooling_demands = round(quantiles(only_cooling_demands, n=100)[98]*2.78*math.pow(10,-7),2) # get the 98th percentile active cooling load in kW 
+    max_cooling_demands_absolute = round(quantiles(only_cooling_demands, n=100)[100]*2.78*math.pow(10,-7),2) # get the 100th  (max)percentile active cooling load in kW 
+    
     
     #Extract EUI
     gridFactor = assumptions['Grid pollution (kgCO2e/kWh)']
@@ -90,6 +92,8 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
         "max_electricity_demand": max_electricity_demand,
         "max_cooling_demand_kW": max_cooling_demands,
         "max_cooling_demand_RT": round(max_cooling_demands*0.284,2),
+        "max_cooling_demand_kW_absolute": max_cooling_demands_absolute,
+        "max_cooling_demand_RT_absolute": round(max_cooling_demands_absolute*0.284,2),
         "EUI_submission": EUI_submission,
         "EUI_average": round(EUI_average,2),
         "EUI_threshold": round(EUI_threshold,2),
