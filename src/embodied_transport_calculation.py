@@ -129,7 +129,7 @@ def embodied_transport_emissions(input):
     assumptions = load_assumptions(input['building_type'])
     transport_assumptions = load_assumptions(input['building_type'],'transport')
     embodied_assumptions = load_assumptions(input['building_type'],'embodied')
-    total_pax = input['gfa'] /20 #hardcoded 20m2/pax
+    total_pax = input['gfa'] /assumptions['People density (m2/pax AC area)']
     embodied_carbon_reference, average_carbon,embodied_carbon = embodied_calc(input['building_type'],embodied_assumptions,input)
     transport_carbon_reference, transport_carbon = transport_calc(transport_assumptions,input['gfa'],total_pax,input)
     

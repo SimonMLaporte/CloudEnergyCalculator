@@ -7,8 +7,8 @@
   "carpark_area_above_ground": 15000,
   "carpark_area_below_ground": 0,
   "landscape_area": 2000,
-  "NV_percent": 0.0,
-  "LPD": 8,
+  "NV_percent": 0,
+  "LPD": 6,
   "daylight_distance": 0,
   "COP":3,
 
@@ -21,15 +21,15 @@
     "y2": 45,
     "wall_u": 4.4,
     "absorptivity": 0.5,
-    "WWR": 0.75,
+    "WWR": 0.5,
     "window_height": 2,
     "window_width": 2,
-    "overhang_depth": 0,
+    "overhang_depth": 1.5,
     "sidefin_depth": 0,
     "fin_to_fin_distance": 2,
     "z_offset": 0,
     "glass_u": 6.3,
-    "glass_sc": 0.57
+    "glass_sc": 0.5
   },
   {
     "x1": 0,
@@ -38,15 +38,15 @@
     "y2": 45,
     "wall_u": 4.4,
     "absorptivity": 0.5,
-    "WWR": 0.75,
+    "WWR": 0.5,
     "window_height": 2,
     "window_width": 2,
-    "overhang_depth": 0,
+    "overhang_depth": 1.5,
     "sidefin_depth": 0,
     "fin_to_fin_distance": 2,
     "z_offset": 0,
     "glass_u": 6.3,
-    "glass_sc": 0.57
+    "glass_sc": 0.5
   },
   {
     "x1": 45,
@@ -55,15 +55,15 @@
     "y2": 0,
     "wall_u": 4.4,
     "absorptivity": 0.5,
-    "WWR": 0.75,
+    "WWR": 0.5,
     "window_height": 2,
     "window_width": 2,
-    "overhang_depth": 0,
+    "overhang_depth": 1.5,
     "sidefin_depth": 0,
     "fin_to_fin_distance": 2,
     "z_offset": 0,
     "glass_u": 6.3,
-    "glass_sc": 0.57
+    "glass_sc": 0.5
   },
   {
     "x1": 45,
@@ -72,15 +72,15 @@
     "y2": 0,
     "wall_u": 4.4,
     "absorptivity": 0.5,
-    "WWR": 0.75,
+    "WWR": 0.5,
     "window_height": 2,
     "window_width": 2,
-    "overhang_depth": 0,
+    "overhang_depth": 1.5,
     "sidefin_depth": 0,
     "fin_to_fin_distance": 2,
     "z_offset": 0,
     "glass_u": 6.3,
-    "glass_sc": 0.57
+    "glass_sc": 0.5
   }
   
   ],
@@ -116,6 +116,4 @@
   "commute_distance_by_taxi": 0,
   "commute_distance_by_e_motor_bike": 0,
   "commute_distance_by_ev": 0
-  
-  
 }
