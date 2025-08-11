@@ -60,7 +60,7 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     #remove zero cooling hours
     only_cooling_demands = [i for i in all_cooling_demands if i != 0]
     max_cooling_demands = round(quantiles(only_cooling_demands, n=100)[98]*2.78*math.pow(10,-7),2) # get the 98th percentile active cooling load in kW 
-    max_cooling_demands_absolute = round(quantiles(only_cooling_demands, n=100)[100]*2.78*math.pow(10,-7),2) # get the 100th  (max)percentile active cooling load in kW 
+    max_cooling_demands_absolute = round(max(only_cooling_demands)*2.78*math.pow(10,-7),2) # get the 100th  (max)percentile active cooling load in kW 
     
     
     #Extract EUI
