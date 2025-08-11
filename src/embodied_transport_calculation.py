@@ -1,6 +1,6 @@
 from generate_idf import load_assumptions, calculate_glazing_area
 
-def transport_calc(assumption,build_area,total_pax,input):
+def transport_calc(assumption,gfa,total_pax,input):
  
     if input['building_type'] == 'office':
         #segment assumptions
@@ -20,7 +20,7 @@ def transport_calc(assumption,build_area,total_pax,input):
                                                                      rail['Fraction'] * rail['GHG Emissions']*rail['Distance']+
                                                                      walk['Fraction'] * walk['GHG Emissions']*walk['Distance']+
                                                                      taxi['Fraction'] * taxi['GHG Emissions']*taxi['Distance']
-                                                                     )/build_area/2
+                                                                     )/gfa/2
         car = {
             "Fraction": input['commute_by_car'],
             "Distance": input['commute_distance_by_car'],
@@ -66,7 +66,7 @@ def transport_calc(assumption,build_area,total_pax,input):
                                                                 bus['Fraction'] * bus['GHG Emissions']*bus['Distance']+
                                                                 e_car['Fraction'] * e_car['GHG Emissions'] * e_car['Distance']+
                                                                 e_motor['Fraction'] * e_motor['GHG Emissions'] * e_motor['Distance']
-                                                                )/build_area/2
+                                                                )/gfa/2
         
         
         
@@ -126,13 +126,12 @@ def embodied_calc(building_type,assumptions,input):
     
     
 def embodied_transport_emissions(input):
-    build_area = input['gfa'] + input['carpark_area_above_ground'] + input['carpark_area_above_ground']
     assumptions = load_assumptions(input['building_type'])
     transport_assumptions = load_assumptions(input['building_type'],'transport')
     embodied_assumptions = load_assumptions(input['building_type'],'embodied')
-    total_pax = input['gfa'] /assumptions['People density (m2/pax AC area)']
+    total_pax = input['gfa'] /20 #hardcoded 20m2/pax
     embodied_carbon_reference, average_carbon,embodied_carbon = embodied_calc(input['building_type'],embodied_assumptions,input)
-    transport_carbon_reference, transport_carbon = transport_calc(transport_assumptions,build_area,total_pax,input)
+    transport_carbon_reference, transport_carbon = transport_calc(transport_assumptions,input['gfa'],total_pax,input)
     
     
     other_carbon = {
