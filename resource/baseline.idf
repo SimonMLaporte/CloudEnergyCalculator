@@ -52,7 +52,7 @@ SurfaceConvectionAlgorithm:Outside,
 
 HeatBalanceAlgorithm,
     ConductionTransferFunction,  !- Algorithm
-    200,                     !- Surface Temperature Upper Limit {C}
+    1000,                    !- Surface Temperature Upper Limit {C}
     0.1,                     !- Minimum Surface Convection Heat Transfer Coefficient Value {W/m2-K}
     1000;                    !- Maximum Surface Convection Heat Transfer Coefficient Value {W/m2-K}
 
@@ -506,7 +506,7 @@ Schedule:Compact,
     THROUGH: 12/31,          !- Field 1
     FOR: AllDays,            !- Field 2
     Until: 24:00,            !- Field 3
-     22;                     !- Field 4
+    22;                      !- Field 4
 
 Schedule:Compact,
     cooling_control,         !- Name

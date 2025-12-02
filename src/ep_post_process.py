@@ -17,7 +17,7 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     assumptions_out_path = os.path.join(result_dir, 'used_assumptions.json')
     gfa = inputJSON["gfa"]
     COP = inputJSON["COP"]
-
+    diversity = assumptions['AC diversity, 0-1']
 
     #Calculate OTTV & RTTV
     OTTV, RTTV = calculate_OTTV(inputJSON)
@@ -27,17 +27,17 @@ def extract_ep_results(inputJSON, assumptions, other_carbon):
     
     cooling_electricity = get_csv_data(result_file,"DistrictCooling:Facility [J](Hourly)")
     max_cooling_electricity = max([item *2.78*math.pow(10,-7)/COP for item in cooling_electricity])
-    annual_cooling_electricity = round(sum(cooling_electricity)*2.78*math.pow(10,-7)/gfa/COP,2)
+    annual_cooling_electricity = round(sum(cooling_electricity)*2.78*math.pow(10,-7)*diversity/gfa/COP,2)
     
     lighting_electricity = get_csv_data(result_file,"main_lighting:InteriorLights:Electricity [J](Hourly)")
     max_lighting_electricity = max([item *2.78*math.pow(10,-7) for item in lighting_electricity])
-    annual_lighting_electricity = round(sum(lighting_electricity)*2.78*math.pow(10,-7)/gfa,2)
+    annual_lighting_electricity = round(sum(lighting_electricity)*2.78*math.pow(10,-7)*diversity/gfa,2)
     
     lift_electricity = get_csv_data(result_file,"lifts:InteriorEquipment:Electricity [J](Hourly)")
     
     equipment_electricity = get_csv_data(result_file,"main_equipment:InteriorEquipment:Electricity [J](Hourly)") + lift_electricity
     max_equipment_electricity = max([item *2.78*math.pow(10,-7) for item in equipment_electricity])
-    annual_equipment_electricity = round(sum(equipment_electricity)*2.78*math.pow(10,-7)/gfa,2)
+    annual_equipment_electricity = round(sum(equipment_electricity)*2.78*math.pow(10,-7)*diversity/gfa,2)
     
     carpark_electricity = get_csv_data(result_file,"carpark_lighting:InteriorLights:Electricity [J](Hourly)")+get_csv_data(result_file,"carpark_ventilation:InteriorEquipment:Electricity [J](Hourly)")
     max_carpark_electricity = max([item *2.78*math.pow(10,-7) for item in carpark_electricity])

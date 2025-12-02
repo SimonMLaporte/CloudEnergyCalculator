@@ -20,3 +20,4 @@ run_energyplus()
 other_carbon = embodied_transport_emissions(inputJSON)
 extract_ep_results(inputJSON, assumptions, other_carbon)
 #debug_show_ep_results()
+    

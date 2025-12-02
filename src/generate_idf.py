@@ -133,7 +133,7 @@ def generate_idf(inputJson):
     equip[0].Design_Level = newEquip
 
     # Set people
-    newPeople = gfa * (1-NV) * assumptions['People diversity, 0-1'] /assumptions['People density (m2/pax AC area)']
+    newPeople = gfa * (1-NV) /assumptions['People density (m2/pax AC area)']
     people = idf.idfobjects["PEOPLE"]
     people[0].Number_of_People = newPeople
 
