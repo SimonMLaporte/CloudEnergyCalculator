@@ -1,18 +1,18 @@
 ﻿data,office,retail_hyper,retail_center,hotel_4star,healthcare_limited,healthcare_major,residential,carpark_above_ground,carpark_below_ground,,height_adjustment,building_lifespan
 unit,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,kgCo2/m2,,"percent increase per m above 64m, percent decrease per m below 50m",
-reinforced_concrete,144,144,144,144,144,144,144,235,235,gfa,,50
-reinforced_concrete_green,144,144,144,144,144,144,144,235,235,gfa,,50
+reinforced_concrete,201.6,201.6,201.6,201.6,201.6,201.6,201.6,235,235,gfa,,50
+reinforced_concrete_green,201.6,201.6,201.6,201.6,201.6,201.6,201.6,235,235,gfa,,50
 precast_concrete,134,134,134,134,134,134,134,0,0,gfa,,50
 structural_steel,211,211,211,211,211,211,211,0,0,gfa,,50
 structural_steel_green,211,211,211,211,211,211,211,0,0,gfa,,50
 timber_conventional,-108,-108,-108,-108,-108,-108,-108,0,0,gfa,,50
 timber_manufactured,-108,-108,-108,-108,-108,-108,-108,0,0,gfa,,50
-structural_masonry,0,0,0,0,0,0,0,0,0,gfa,,50
 other_structural_system,0,0,0,0,0,0,0,0,0,gfa,,
 brick_wall,120,120,120,120,120,120,120,0,0,gfa,,
 glass_curtain_wall,239,239,239,239,239,239,239,0,0,gfa,,
 aluminium_wall,141,141,141,141,141,141,141,0,0,gfa,,
 composite_wall,16.7,16.7,16.7,16.7,16.7,16.7,16.7,0,0,gfa,,
+earth_composite_wall,0,0,0,0,0,0,0,0,0,gfa,,
 other_wall,0,0,0,0,0,0,0,0,0,gfa,,
 reinforced_concrete_roof,120,120,120,120,120,120,120,0,0,roof_area,,
 metal_deck_roof,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0,0,roof_area,,
